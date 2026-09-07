@@ -42,14 +42,20 @@
                     <p>Silakan masukkan kredensial Anda untuk melanjutkan ke dashboard.</p>
                 </div>
 
-                <form action="#" method="POST" class="login-form">
+                @if ($errors->any())
+                    <div class="login-alert">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
+                <form action="{{ route('login.post') }}" method="POST" class="login-form">
                     @csrf
 
                     <div class="form-group">
-                        <label for="email_nik">NIK / Alamat Email</label>
+                        <label for="email">Alamat Email</label>
                         <div class="input-icon-wrapper">
                             <span class="icon-mail">&#128231;</span>
-                            <input type="text" id="email_nik" name="email_nik" placeholder="Masukkan NIK atau email terdaftar" required>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="Masukkan email terdaftar" required autofocus>
                         </div>
                     </div>
 

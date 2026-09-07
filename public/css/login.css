@@ -234,3 +234,14 @@ html, body {
         padding: 30px 20px;
     }
 }
+/* NOTIFIKASI ERROR LOGIN */
+.login-alert {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
