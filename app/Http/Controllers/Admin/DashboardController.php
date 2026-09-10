@@ -3,42 +3,51 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Masyarakat;
+use App\Models\Program;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Data contoh — ganti dengan query model saat tabel data masyarakat sudah ada.
+        // Kursi program yang masih kosong, dikelompokkan per jenis penyelenggara (menu Pemberdayaan).
+        $kursiPerJenis = Program::query()
+            ->join('mitras', 'mitras.id', '=', 'programs.mitra_id')
+            ->whereIn('programs.status', ['Pendaftaran', 'Berjalan'])
+            ->groupBy('mitras.jenis')
+            ->selectRaw('mitras.jenis as jenis, SUM(GREATEST(programs.kuota - programs.peserta, 0)) as kursi')
+            ->pluck('kursi', 'jenis');
+
         $ringkasan = [
-            'total_masyarakat' => 1245,
-            'butuh_pekerjaan' => 328,
-            'kebutuhan_ukpd' => 48,
-            'kebutuhan_csr' => 27,
+            'total_masyarakat' => Masyarakat::count(),
+            'program_aktif' => Program::whereIn('status', ['Pendaftaran', 'Berjalan'])->count(),
+            'kursi_ukpd' => (int) ($kursiPerJenis['UKPD'] ?? 0),
+            'kursi_csr' => (int) ($kursiPerJenis['CSR'] ?? 0),
         ];
 
-        $statusMasyarakat = [
-            ['label' => 'Membutuhkan Pekerjaan', 'jumlah' => 328, 'warna' => '#b91c1c'],
-            ['label' => 'Processing', 'jumlah' => 56, 'warna' => '#c2570c'],
-            ['label' => 'Accepted', 'jumlah' => 42, 'warna' => '#1d4ed8'],
-            ['label' => 'Placed', 'jumlah' => 31, 'warna' => '#94a3b8'],
+        $jumlahPerStatus = Program::query()
+            ->groupBy('status')
+            ->selectRaw('status, COUNT(*) as jumlah')
+            ->pluck('jumlah', 'status');
+
+        $statusProgram = [
+            ['label' => 'Pendaftaran', 'jumlah' => (int) ($jumlahPerStatus['Pendaftaran'] ?? 0), 'warna' => '#1d4ed8'],
+            ['label' => 'Berjalan', 'jumlah' => (int) ($jumlahPerStatus['Berjalan'] ?? 0), 'warna' => '#2f7d57'],
+            ['label' => 'Selesai', 'jumlah' => (int) ($jumlahPerStatus['Selesai'] ?? 0), 'warna' => '#94a3b8'],
         ];
 
-        $rekomendasi = [
-            ['posisi' => 'Driver Operasional', 'match' => 95],
-            ['posisi' => 'Operator Gudang', 'match' => 89],
-            ['posisi' => 'Teknisi Lapangan', 'match' => 84],
-        ];
+        $programTerbuka = Program::with('mitra')
+            ->where('status', 'Pendaftaran')
+            ->orderBy('tanggal_mulai')
+            ->take(3)
+            ->get();
 
-        $masyarakatTerbaru = [
-            ['nama' => 'Budi Santoso', 'wilayah' => 'Jakarta Selatan', 'keahlian' => 'Mengemudi', 'status' => 'Pending'],
-            ['nama' => 'Siti Aminah', 'wilayah' => 'Jakarta Timur', 'keahlian' => 'Administrasi', 'status' => 'Diproses'],
-            ['nama' => 'Agus Setiawan', 'wilayah' => 'Jakarta Barat', 'keahlian' => 'Teknik Listrik', 'status' => 'Ditempatkan'],
-        ];
+        $masyarakatTerbaru = Masyarakat::latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'ringkasan',
-            'statusMasyarakat',
-            'rekomendasi',
+            'statusProgram',
+            'programTerbuka',
             'masyarakatTerbaru'
         ));
     }

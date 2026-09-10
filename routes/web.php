@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MitraController;
+use App\Http\Controllers\Admin\PemberdayaanController;
+use App\Http\Controllers\Admin\ProgramController;
+use App\Http\Controllers\Admin\RekomendasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\PelatihanController;
@@ -43,10 +47,6 @@ Route::post('/logout', [AuthController::class, 'logout'])
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    Route::get('/pemberdayaan', function () {
-        return view('admin.pemberdayaan');
-    })->name('pemberdayaan');
-
     // Data Masyarakat
     Route::get('/masyarakat', [MasyarakatController::class, 'index'])->name('masyarakat');
     Route::get('/masyarakat/create', [MasyarakatController::class, 'create'])->name('masyarakat.create');
@@ -55,49 +55,26 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('/masyarakat/{id}', [MasyarakatController::class, 'update'])->name('masyarakat.update');
     Route::delete('/masyarakat/{id}', [MasyarakatController::class, 'destroy'])->name('masyarakat.destroy');
 
-    // Rekomendasi Pekerjaan
-    Route::view('/rekomendasi', 'rekomendasi.index')->name('rekomendasi.index');
-    Route::get('/rekomendasi/{id}', function ($id) {
-        // Data contoh — ganti dengan query model saat tabel mitra kerja sudah ada.
-        $perusahaan = [
-            [
-                'nama' => 'Perumda Pasar Jaya',
-                'sumber' => 'UKPD',
-                'posisi' => 'Petugas Operasional Pasar',
-                'lokasi' => 'Jakarta Selatan',
-                'tersedia' => 8,
-                'match' => 94,
-            ],
-            [
-                'nama' => 'Dinas Bina Marga DKI Jakarta',
-                'sumber' => 'UKPD',
-                'posisi' => 'Teknisi Lapangan',
-                'lokasi' => 'Jakarta Timur',
-                'tersedia' => 5,
-                'match' => 89,
-            ],
-            [
-                'nama' => 'PT Sinar Sejahtera Logistik',
-                'sumber' => 'CSR',
-                'posisi' => 'Driver Operasional',
-                'lokasi' => 'Jakarta Selatan',
-                'tersedia' => 12,
-                'match' => 87,
-            ],
-            [
-                'nama' => 'Yayasan Karya Bersama',
-                'sumber' => 'CSR',
-                'posisi' => 'Admin Program Pemberdayaan',
-                'lokasi' => 'Jakarta Pusat',
-                'tersedia' => 3,
-                'match' => 82,
-            ],
-        ];
+    // Pemberdayaan: penyelenggara (UKPD/CSR) dan program
+    Route::get('/pemberdayaan', [PemberdayaanController::class, 'index'])->name('pemberdayaan');
 
-        return view('rekomendasi.show', compact('id', 'perusahaan'));
-    })->name('rekomendasi.show');
+    Route::get('/pemberdayaan/mitra/create', [MitraController::class, 'create'])->name('mitra.create');
+    Route::post('/pemberdayaan/mitra', [MitraController::class, 'store'])->name('mitra.store');
+    Route::get('/pemberdayaan/mitra/{mitra}', [MitraController::class, 'show'])->name('mitra.show');
+    Route::get('/pemberdayaan/mitra/{mitra}/edit', [MitraController::class, 'edit'])->name('mitra.edit');
+    Route::put('/pemberdayaan/mitra/{mitra}', [MitraController::class, 'update'])->name('mitra.update');
+    Route::delete('/pemberdayaan/mitra/{mitra}', [MitraController::class, 'destroy'])->name('mitra.destroy');
+
+    Route::get('/pemberdayaan/program/create', [ProgramController::class, 'create'])->name('program.create');
+    Route::post('/pemberdayaan/program', [ProgramController::class, 'store'])->name('program.store');
+    Route::get('/pemberdayaan/program/{program}/edit', [ProgramController::class, 'edit'])->name('program.edit');
+    Route::put('/pemberdayaan/program/{program}', [ProgramController::class, 'update'])->name('program.update');
+    Route::delete('/pemberdayaan/program/{program}', [ProgramController::class, 'destroy'])->name('program.destroy');
+
+    // Rekomendasi: pencocokan warga dengan program
+    Route::get('/rekomendasi', [RekomendasiController::class, 'index'])->name('rekomendasi.index');
+    Route::get('/rekomendasi/{masyarakat}', [RekomendasiController::class, 'show'])->name('rekomendasi.show');
 });
-
 
 /*
 |--------------------------------------------------------------------------

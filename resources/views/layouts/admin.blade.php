@@ -55,7 +55,7 @@
                     <rect x="3" y="3" width="18" height="18" rx="2.5"/>
                     <path d="M8 16v-4M12 16V8M16 16v-6"/>
                 </svg>
-                <span>Rekomendasi Pekerjaan</span>
+                <span>Rekomendasi Program</span>
             </a>
             <a href="{{ route('penempatan.index') }}" class="nav-link {{ request()->routeIs('penempatan.*') ? 'is-active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">

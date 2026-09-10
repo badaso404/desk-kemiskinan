@@ -5,14 +5,14 @@
 @section('content')
 <div class="page-head">
     <h1>Selamat Datang, {{ auth()->user()->name }}</h1>
-    <p>Kelola data masyarakat dan kesempatan kerja.</p>
+    <p>Kelola pendataan warga dan penyelenggaraan program pemberdayaan.</p>
 </div>
 
 <!-- KARTU RINGKASAN -->
 <section class="stat-grid">
     <div class="stat-box">
         <div class="stat-box-head">
-            <span>Total Masyarakat</span>
+            <span>Warga Terdata</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.8">
                 <circle cx="9" cy="8" r="3"/><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/><path d="M17 14c2.3 0 4 1.6 4 4"/><circle cx="17" cy="9" r="2.2"/>
             </svg>
@@ -21,40 +21,40 @@
     </div>
     <div class="stat-box">
         <div class="stat-box-head">
-            <span>Membutuhkan<br>Pekerjaan</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="1.8">
-                <rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/><path d="m4 5 16 16"/>
+            <span>Program Aktif</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#2f7d57" stroke-width="1.8">
+                <path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 12v4c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-4"/>
             </svg>
         </div>
-        <strong>{{ number_format($ringkasan['butuh_pekerjaan']) }}</strong>
+        <strong>{{ number_format($ringkasan['program_aktif']) }}</strong>
     </div>
     <div class="stat-box">
         <div class="stat-box-head">
-            <span>Kebutuhan UKPD</span>
+            <span>Kursi dari UKPD</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.8">
                 <rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2"/>
             </svg>
         </div>
-        <strong>{{ number_format($ringkasan['kebutuhan_ukpd']) }}</strong>
+        <strong>{{ number_format($ringkasan['kursi_ukpd']) }}</strong>
     </div>
     <div class="stat-box">
         <div class="stat-box-head">
-            <span>Kebutuhan CSR</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="1.8">
+            <span>Kursi dari CSR</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#c2570c" stroke-width="1.8">
                 <path d="M3 13h4l3 5 3-11 2 6h6"/>
             </svg>
         </div>
-        <strong>{{ number_format($ringkasan['kebutuhan_csr']) }}</strong>
+        <strong>{{ number_format($ringkasan['kursi_csr']) }}</strong>
     </div>
 </section>
 
 <!-- BARIS GRAFIK -->
 <section class="grid-two">
     <article class="card">
-        <h2>Status Masyarakat</h2>
+        <h2>Status Program</h2>
         <div class="bar-list">
-            @php $maksimal = max(array_column($statusMasyarakat, 'jumlah')) ?: 1; @endphp
-            @foreach ($statusMasyarakat as $status)
+            @php $maksimal = max(array_column($statusProgram, 'jumlah')) ?: 1; @endphp
+            @foreach ($statusProgram as $status)
                 <div class="bar-item">
                     <div class="bar-label">
                         <span>{{ $status['label'] }}</span>
@@ -70,13 +70,13 @@
     </article>
 
     <article class="card">
-        <h2>Kebutuhan Pekerjaan</h2>
+        <h2>Sumber Kursi Program</h2>
         @php
-            $ukpd = $ringkasan['kebutuhan_ukpd'];
-            $csr = $ringkasan['kebutuhan_csr'];
-            $totalKebutuhan = $ukpd + $csr;
+            $ukpd = $ringkasan['kursi_ukpd'];
+            $csr = $ringkasan['kursi_csr'];
+            $totalKursi = $ukpd + $csr;
             $keliling = 2 * M_PI * 70; // r = 70
-            $porsiUkpd = $totalKebutuhan ? $ukpd / $totalKebutuhan * $keliling : 0;
+            $porsiUkpd = $totalKursi ? $ukpd / $totalKursi * $keliling : 0;
         @endphp
         <div class="donut-wrapper">
             <svg class="donut" viewBox="0 0 160 160">
@@ -90,8 +90,8 @@
                         stroke-linecap="butt" transform="rotate(-90 80 80)"/>
             </svg>
             <div class="donut-center">
-                <strong>{{ $totalKebutuhan }}</strong>
-                <span>Total</span>
+                <strong>{{ $totalKursi }}</strong>
+                <span>Kursi</span>
             </div>
         </div>
         <div class="legend">
@@ -104,60 +104,59 @@
 <!-- BARIS BAWAH -->
 <section class="grid-side">
     <article class="card">
-        <h2>Rekomendasi Terbaru</h2>
+        <div class="card-head">
+            <h2>Pendaftaran Dibuka</h2>
+            <a href="{{ route('admin.pemberdayaan', ['tab' => 'program']) }}" class="card-link">Kelola</a>
+        </div>
         <div class="reco-list">
-            @foreach ($rekomendasi as $item)
+            @forelse ($programTerbuka as $program)
                 <div class="reco-item">
                     <div>
-                        <strong>{{ $item['posisi'] }}</strong>
-                        <span>Match: {{ $item['match'] }}%</span>
+                        <strong>{{ $program->nama }}</strong>
+                        <span>{{ $program->sisa_kuota }} kursi tersisa &middot; mulai {{ $program->tanggal_mulai->format('d M') }}</span>
                     </div>
-                    <a href="{{ route('admin.rekomendasi.show', 1) }}" class="reco-go" aria-label="Lihat {{ $item['posisi'] }}">
+                    <a href="{{ route('admin.program.edit', $program) }}" class="reco-go" aria-label="Kelola {{ $program->nama }}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M13 6l6 6-6 6"/>
                         </svg>
                     </a>
                 </div>
-            @endforeach
+            @empty
+                <p class="empty-state">Belum ada program yang membuka pendaftaran.</p>
+            @endforelse
         </div>
     </article>
 
     <article class="card">
         <div class="card-head">
-            <h2>Masyarakat Terbaru</h2>
-            <a href="#" class="card-link">Lihat Semua</a>
+            <h2>Warga Terbaru</h2>
+            <a href="{{ route('admin.masyarakat') }}" class="card-link">Lihat Semua</a>
         </div>
         <div class="table-scroll">
             <table class="data-table">
                 <thead>
                     <tr>
                         <th>Nama</th>
-                        <th>Wilayah</th>
+                        <th>Kecamatan</th>
                         <th>Keahlian</th>
-                        <th>Status</th>
+                        <th>Minat Pelatihan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($masyarakatTerbaru as $warga)
+                    @forelse ($masyarakatTerbaru as $warga)
                         <tr>
-                            <td class="cell-nama">{{ $warga['nama'] }}</td>
-                            <td>{{ $warga['wilayah'] }}</td>
-                            <td>{{ $warga['keahlian'] }}</td>
-                            <td>
-                                <span class="badge badge-{{ \Illuminate\Support\Str::slug($warga['status']) }}">
-                                    {{ $warga['status'] }}
-                                </span>
-                            </td>
-                            <td>
-                                <a href="#" class="btn-edit" aria-label="Ubah data {{ $warga['nama'] }}">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                        <path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-                                    </svg>
-                                </a>
+                            <td class="cell-nama">{{ $warga->nama }}</td>
+                            <td>{{ $warga->kecamatan }}</td>
+                            <td>{{ $warga->keahlian ?: '—' }}</td>
+                            <td>{{ $warga->minat_pelatihan ?: '—' }}</td>
+                            <td class="cell-aksi">
+                                <a href="{{ route('admin.rekomendasi.show', $warga) }}" class="btn-link">Rekomendasi</a>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr><td colspan="5"><p class="empty-state">Belum ada warga terdata.</p></td></tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
