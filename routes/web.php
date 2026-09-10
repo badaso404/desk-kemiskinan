@@ -6,7 +6,7 @@ use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MasyarakatController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PenempatanController;
 /*
 |--------------------------------------------------------------------------
 | Halaman Publik
@@ -55,3 +55,30 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('/masyarakat/{id}', [MasyarakatController::class, 'update'])->name('masyarakat.update');
     Route::delete('/masyarakat/{id}', [MasyarakatController::class, 'destroy'])->name('masyarakat.destroy');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| Panel Penempatan
+|--------------------------------------------------------------------------
+*/
+Route::get('/penempatan', function () {
+    return view('penempatan');
+});
+
+
+Route::get('/penempatan/tambah', function () {
+    return view('penempatan_tambah');
+});
+
+// Route CRUD menggunakan PenempatanController
+Route::get('/penempatan', [PenempatanController::class, 'index'])->name('penempatan.index');
+Route::get('/penempatan/tambah', [PenempatanController::class, 'create'])->name('penempatan.create');
+Route::post('/penempatan/simpan', [PenempatanController::class, 'store'])->name('penempatan.store');
+
+// ... (Route index, create, store sebelumnya)
+
+// Route Update & Read (Edit & Detail)
+Route::get('/penempatan/{id}/edit', [PenempatanController::class, 'edit'])->name('penempatan.edit');
+Route::put('/penempatan/{id}', [PenempatanController::class, 'update'])->name('penempatan.update');
+Route::get('/penempatan/{id}', [PenempatanController::class, 'show'])->name('penempatan.show');

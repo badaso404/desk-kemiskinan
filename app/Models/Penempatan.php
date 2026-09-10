@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Penempatan extends Model
+{
+    use HasFactory;
+
+    // Mengizinkan kolom ini diisi melalui form
+    protected $fillable = [
+        'nama', 'nik', 'posisi', 'pemberi_kerja', 'tanggal_penempatan', 'status'
+    ];
+}
