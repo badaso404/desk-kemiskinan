@@ -43,9 +43,9 @@
                 </svg>
                 <span>Data Masyarakat</span>
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('admin.pemberdayaan') }}" class="nav-link {{ request()->routeIs('admin.pemberdayaan') ? 'is-active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/>
+                <circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/>
                     <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/><path d="M17 14c2.3 0 4 1.6 4 4"/>
                 </svg>
                 <span>Pemberdayaan</span>
