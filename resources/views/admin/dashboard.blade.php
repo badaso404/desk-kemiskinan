@@ -112,7 +112,7 @@
                         <strong>{{ $item['posisi'] }}</strong>
                         <span>Match: {{ $item['match'] }}%</span>
                     </div>
-                    <a href="#" class="reco-go" aria-label="Lihat {{ $item['posisi'] }}">
+                    <a href="{{ route('admin.rekomendasi.show', 1) }}" class="reco-go" aria-label="Lihat {{ $item['posisi'] }}">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 12h14M13 6l6 6-6 6"/>
                         </svg>

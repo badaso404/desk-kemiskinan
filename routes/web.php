@@ -54,6 +54,48 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/masyarakat/{id}/edit', [MasyarakatController::class, 'edit'])->name('masyarakat.edit');
     Route::put('/masyarakat/{id}', [MasyarakatController::class, 'update'])->name('masyarakat.update');
     Route::delete('/masyarakat/{id}', [MasyarakatController::class, 'destroy'])->name('masyarakat.destroy');
+
+    // Rekomendasi Pekerjaan
+    Route::view('/rekomendasi', 'rekomendasi.index')->name('rekomendasi.index');
+    Route::get('/rekomendasi/{id}', function ($id) {
+        // Data contoh — ganti dengan query model saat tabel mitra kerja sudah ada.
+        $perusahaan = [
+            [
+                'nama' => 'Perumda Pasar Jaya',
+                'sumber' => 'UKPD',
+                'posisi' => 'Petugas Operasional Pasar',
+                'lokasi' => 'Jakarta Selatan',
+                'tersedia' => 8,
+                'match' => 94,
+            ],
+            [
+                'nama' => 'Dinas Bina Marga DKI Jakarta',
+                'sumber' => 'UKPD',
+                'posisi' => 'Teknisi Lapangan',
+                'lokasi' => 'Jakarta Timur',
+                'tersedia' => 5,
+                'match' => 89,
+            ],
+            [
+                'nama' => 'PT Sinar Sejahtera Logistik',
+                'sumber' => 'CSR',
+                'posisi' => 'Driver Operasional',
+                'lokasi' => 'Jakarta Selatan',
+                'tersedia' => 12,
+                'match' => 87,
+            ],
+            [
+                'nama' => 'Yayasan Karya Bersama',
+                'sumber' => 'CSR',
+                'posisi' => 'Admin Program Pemberdayaan',
+                'lokasi' => 'Jakarta Pusat',
+                'tersedia' => 3,
+                'match' => 82,
+            ],
+        ];
+
+        return view('rekomendasi.show', compact('id', 'perusahaan'));
+    })->name('rekomendasi.show');
 });
 
 
@@ -62,23 +104,11 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 | Panel Penempatan
 |--------------------------------------------------------------------------
 */
-Route::get('/penempatan', function () {
-    return view('penempatan');
+Route::middleware('auth')->group(function () {
+    Route::get('/penempatan', [PenempatanController::class, 'index'])->name('penempatan.index');
+    Route::get('/penempatan/tambah', [PenempatanController::class, 'create'])->name('penempatan.create');
+    Route::post('/penempatan/simpan', [PenempatanController::class, 'store'])->name('penempatan.store');
+    Route::get('/penempatan/{id}/edit', [PenempatanController::class, 'edit'])->name('penempatan.edit');
+    Route::put('/penempatan/{id}', [PenempatanController::class, 'update'])->name('penempatan.update');
+    Route::get('/penempatan/{id}', [PenempatanController::class, 'show'])->name('penempatan.show');
 });
-
-
-Route::get('/penempatan/tambah', function () {
-    return view('penempatan_tambah');
-});
-
-// Route CRUD menggunakan PenempatanController
-Route::get('/penempatan', [PenempatanController::class, 'index'])->name('penempatan.index');
-Route::get('/penempatan/tambah', [PenempatanController::class, 'create'])->name('penempatan.create');
-Route::post('/penempatan/simpan', [PenempatanController::class, 'store'])->name('penempatan.store');
-
-// ... (Route index, create, store sebelumnya)
-
-// Route Update & Read (Edit & Detail)
-Route::get('/penempatan/{id}/edit', [PenempatanController::class, 'edit'])->name('penempatan.edit');
-Route::put('/penempatan/{id}', [PenempatanController::class, 'update'])->name('penempatan.update');
-Route::get('/penempatan/{id}', [PenempatanController::class, 'show'])->name('penempatan.show');
