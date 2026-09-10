@@ -39,6 +39,46 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::view('/admin/rekomendasi', 'rekomendasi.index')->name('admin.rekomendasi.index');
+    Route::get('/admin/rekomendasi/{id}', function ($id) {
+        $perusahaan = [
+            [
+                'nama' => 'Perumda Pasar Jaya',
+                'sumber' => 'UKPD',
+                'posisi' => 'Petugas Operasional Pasar',
+                'lokasi' => 'Jakarta Selatan',
+                'tersedia' => 8,
+                'match' => 94,
+            ],
+            [
+                'nama' => 'Dinas Bina Marga DKI Jakarta',
+                'sumber' => 'UKPD',
+                'posisi' => 'Teknisi Lapangan',
+                'lokasi' => 'Jakarta Timur',
+                'tersedia' => 5,
+                'match' => 89,
+            ],
+            [
+                'nama' => 'PT Sinar Sejahtera Logistik',
+                'sumber' => 'CSR',
+                'posisi' => 'Driver Operasional',
+                'lokasi' => 'Jakarta Selatan',
+                'tersedia' => 12,
+                'match' => 87,
+            ],
+            [
+                'nama' => 'Yayasan Karya Bersama',
+                'sumber' => 'CSR',
+                'posisi' => 'Admin Program Pemberdayaan',
+                'lokasi' => 'Jakarta Pusat',
+                'tersedia' => 3,
+                'match' => 82,
+            ],
+        ];
+
+        return view('rekomendasi.show', compact('id', 'perusahaan'));
+    })->name('admin.rekomendasi.show');
+    Route::resource('/admin/pelatihan', PelatihanController::class)->except(['show']);
 });

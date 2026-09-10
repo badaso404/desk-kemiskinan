@@ -50,7 +50,7 @@
                 </svg>
                 <span>Pemberdayaan</span>
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('admin.rekomendasi.index') }}" class="nav-link {{ request()->routeIs('admin.rekomendasi.index') ? 'is-active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="2.5"/>
                     <path d="M8 16v-4M12 16V8M16 16v-6"/>
