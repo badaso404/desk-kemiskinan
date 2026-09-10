@@ -57,7 +57,7 @@
                 </svg>
                 <span>Rekomendasi Pekerjaan</span>
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('penempatan.index') }}    " class="nav-link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="2.5"/>
                     <path d="M8 16v-5M12 16v-8M16 16v-3"/>
