@@ -2,15 +2,32 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Penempatan extends Model
 {
-    use HasFactory;
-
-    // Mengizinkan kolom ini diisi melalui form
+    // Melindungi field id agar tidak mass-assignable, sisanya boleh
     protected $fillable = [
-        'nama', 'nik', 'posisi', 'pemberi_kerja', 'tanggal_penempatan', 'status'
+        'masyarakat_id',
+        'program_id',
+        'tanggal_penempatan',
+        'status',
     ];
+
+    /**
+     * Relasi ke tabel masyarakat
+     */
+    public function masyarakat(): BelongsTo
+    {
+        return $this->belongsTo(Masyarakat::class);
+    }
+
+    /**
+     * Relasi ke tabel program
+     */
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class);
+    }
 }

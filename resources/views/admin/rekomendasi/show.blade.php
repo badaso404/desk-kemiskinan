@@ -3,6 +3,15 @@
 @section('title', 'Rekomendasi untuk '.$warga->nama)
 
 @section('content')
+
+<!-- Notifikasi Pesan Error (Misal jika kandidat sudah pernah dimasukkan ke program ini) -->
+@if(session('error'))
+    <div style="margin-bottom: 1.5rem; background-color: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; padding: 1rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span style="font-size: 14px; font-weight: 500;">{{ session('error') }}</span>
+    </div>
+@endif
+
 <a href="{{ route('admin.rekomendasi.index') }}" class="link-back">&larr; Kembali ke Rekomendasi</a>
 
 <div class="page-head">
@@ -90,6 +99,29 @@
                                 <span class="badge badge-{{ strtolower($program->status) }}">{{ $program->status }}</span>
                             </div>
                         </div>
+
+                        <!-- =========== TOMBOL PENEMPATAN LANGSUNG =========== -->
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eaeaea; display: flex; justify-content: flex-end;">
+                            <form action="{{ route('penempatan.store') }}" method="POST">
+                                @csrf
+                                <!-- Data yang dikirim otomatis di balik layar -->
+                                <input type="hidden" name="masyarakat_id" value="{{ $warga->id }}">
+                                <input type="hidden" name="program_id" value="{{ $program->id }}">
+                                <input type="hidden" name="status" value="Seleksi"> 
+                                <input type="hidden" name="tanggal_penempatan" value="{{ now()->format('Y-m-d') }}">
+
+                                <button type="submit" 
+                                       style="background-color: #086b50; color: white; padding: 0.5rem 1.25rem; border-radius: 9999px; font-size: 14px; font-weight: 500; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: 0.2s ease;"
+                                       onmouseover="this.style.backgroundColor='#06503c'" 
+                                       onmouseout="this.style.backgroundColor='#086b50'"
+                                       onclick="return confirm('Tempatkan {{ $warga->nama }} ke program {{ $program->nama }} secara langsung?')">
+                                    <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                    Tempatkan Langsung
+                                </button>
+                            </form>
+                        </div>
+                        <!-- =================================================== -->
+
                     </article>
                 @endforeach
             </div>

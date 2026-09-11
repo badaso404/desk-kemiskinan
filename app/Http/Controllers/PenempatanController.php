@@ -2,99 +2,135 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
+use App\Models\Masyarakat;
+use App\Models\Program;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class PenempatanController extends Controller
 {
-    // READ: Menampilkan halaman utama (Tabel)
-    public function index(): View
+    public function index()
     {
-        // Mengambil semua data dari database terbaru
-        $kandidat = Penempatan::latest()->get();
+        // Tarik data penempatan beserta relasinya untuk menghindari N+1 query
+        $penempatan = Penempatan::with(['masyarakat', 'program.mitra'])->latest()->get();
 
-        // Menghitung statistik otomatis dari database
+        // Format data agar sesuai dengan variabel di penempatan.blade.php
+        $kandidat = $penempatan->map(function ($item) {
+            return (object) [
+                'id' => $item->id,
+                'nama' => $item->masyarakat->nama,
+                'nik' => $item->masyarakat->nik,
+                'posisi' => $item->program->nama, // Menggunakan nama program sebagai posisi
+                'pemberi_kerja' => $item->program->mitra->nama ?? $item->program->penyelenggara,
+                'tanggal_penempatan' => $item->tanggal_penempatan,
+                'status' => $item->status,
+            ];
+        });
+
+        // Hitung statistik untuk Summary Cards
         $stats = [
-            'total' => $kandidat->count(),
-            'belum' => $kandidat->where('status', 'Seleksi')->count(),
-            'sudah' => $kandidat->whereIn('status', ['Bekerja', 'Diterima'])->count()
+            'total' => $penempatan->count(),
+            'belum' => $penempatan->where('status', 'Seleksi')->count(),
+            'sudah' => $penempatan->whereIn('status', ['Diterima', 'Bekerja'])->count(),
         ];
 
         return view('penempatan', compact('kandidat', 'stats'));
     }
 
-    // CREATE: Menampilkan halaman form tambah data
-    public function create(): View
+    /**
+     * Menerima parameter otomatis dari halaman rekomendasi.
+     */
+    public function create(Request $request)
     {
-        return view('penempatan_tambah');
+        // Jika admin mengklik dari halaman Rekomendasi, ID akan otomatis terisi
+        $masyarakat_id = $request->query('masyarakat_id');
+        $program_id = $request->query('program_id');
+
+        $daftarMasyarakat = Masyarakat::orderBy('nama')->get();
+        $daftarProgram = Program::with('mitra')->orderBy('nama')->get();
+
+        return view('admin.penempatan.create', compact(
+            'daftarMasyarakat', 
+            'daftarProgram', 
+            'masyarakat_id', 
+            'program_id'
+        ));
     }
 
-    // STORE: Proses menyimpan data ke database
-    public function store(Request $request): RedirectResponse
+public function store(Request $request)
     {
-        // 1. Validasi input
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|string|max:16',
-            'posisi' => 'required|string|max:255',
-            'pemberi_kerja' => 'required|string|max:255',
-            'tanggal' => 'nullable|date',
-            'status' => 'required|string'
+        $validated = $request->validate([
+            'masyarakat_id' => ['required', 'exists:masyarakats,id'],
+            'program_id' => ['required', 'exists:programs,id'],
+            'tanggal_penempatan' => ['nullable', 'date'],
+            'status' => ['required', 'in:Seleksi,Diterima,Bekerja,Ditolak'],
         ]);
 
-        // 2. Simpan ke database
-        Penempatan::create([
-            'nama' => $request->nama,
-            'nik' => $request->nik,
-            'posisi' => $request->posisi,
-            'pemberi_kerja' => $request->pemberi_kerja,
-            'tanggal_penempatan' => $request->tanggal,
-            'status' => $request->status,
-        ]);
 
-        // 3. Kembali ke halaman utama dengan pesan sukses
-        return redirect()->route('penempatan.index')->with('success', 'Data kandidat berhasil ditambahkan!');
+        $sudahAda = Penempatan::where('masyarakat_id', $validated['masyarakat_id'])
+                              ->where('program_id', $validated['program_id'])
+                              ->exists();
+
+        if ($sudahAda) {
+            return redirect()->back()->with('error', 'Kandidat ini sudah didaftarkan pada program tersebut.');
+        }
+
+        // Simpan langsung ke database
+        Penempatan::create($validated);
+
+        // Langsung arahkan ke halaman daftar penempatan (index)
+        return redirect()->route('penempatan.index')
+                         ->with('success', 'Kandidat berhasil ditempatkan!');
     }
-
-    // READ: Menampilkan halaman detail data (View)
-    public function show($id): View
+    /**
+     * Menampilkan detail penempatan
+     */
+    public function show($id)
     {
-        $penempatan = Penempatan::findOrFail($id);
-        return view('penempatan-detail', compact('penempatan'));
-    }
-
-    // UPDATE (Tampilkan Form): Menampilkan halaman edit dengan data sebelumnya
-    public function edit($id): View
-    {
-        $penempatan = Penempatan::findOrFail($id);
-        return view('penempatan-edit', compact('penempatan'));
-    }
-
-    // UPDATE (Proses): Menyimpan perubahan data ke database
-    public function update(Request $request, $id): RedirectResponse
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|digits:16',
-            'posisi' => 'required|string|max:255',
-            'pemberi_kerja' => 'required|string|max:255',
-            'tanggal' => 'nullable|date',
-            'status' => 'required|string'
-        ]);
-
-        $penempatan = Penempatan::findOrFail($id);
+        $penempatan = Penempatan::with(['masyarakat', 'program.mitra'])->findOrFail($id);
         
-        $penempatan->update([
-            'nama' => $request->nama,
-            'nik' => $request->nik,
-            'posisi' => $request->posisi,
-            'pemberi_kerja' => $request->pemberi_kerja,
-            'tanggal_penempatan' => $request->tanggal,
-            'status' => $request->status,
+        return view('show', compact('penempatan'));
+    }
+
+    /**
+     * Menampilkan form edit
+     */
+    public function edit($id)
+    {
+        $penempatan = Penempatan::findOrFail($id);
+        $daftarMasyarakat = Masyarakat::orderBy('nama')->get();
+        $daftarProgram = Program::with('mitra')->orderBy('nama')->get();
+
+        return view('penempatan-edit', compact('penempatan', 'daftarMasyarakat', 'daftarProgram'));
+    }
+
+    /**
+     * Menyimpan perubahan data penempatan
+     */
+    public function update(Request $request, $id)
+    {
+        $penempatan = Penempatan::findOrFail($id);
+
+        $validated = $request->validate([
+            'masyarakat_id' => ['required', 'exists:masyarakats,id'],
+            'program_id' => ['required', 'exists:programs,id'],
+            'tanggal_penempatan' => ['nullable', 'date'],
+            'status' => ['required', 'in:Seleksi,Diterima,Bekerja,Ditolak'],
         ]);
 
-        return redirect()->route('penempatan.index')->with('success', 'Data kandidat berhasil diperbarui!');
+        // Cek agar tidak bentrok dengan data penempatan lain (Kecuali dirinya sendiri)
+        $sudahAda = Penempatan::where('masyarakat_id', $validated['masyarakat_id'])
+            ->where('program_id', $validated['program_id'])
+            ->where('id', '!=', $id)
+            ->exists();
+
+        if ($sudahAda) {
+            return redirect()->back()->with('error', 'Kandidat ini sudah didaftarkan pada program tersebut.');
+        }
+
+        $penempatan->update($validated);
+
+        return redirect()->route('penempatan.index')->with('success', 'Data penempatan berhasil diperbarui.');
     }
 }

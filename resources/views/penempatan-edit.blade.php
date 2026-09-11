@@ -1,84 +1,82 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Data - Panel Admin</title>
+@extends('layouts.admin')
+
+@section('title', 'Edit Penempatan')
+
+@section('content')
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
-</head>
-<body class="bg-[#f8fafc] text-gray-800 antialiased h-screen flex overflow-hidden">
 
-    <!-- Konten Utama (Asumsi sidebar menggunakan layout / include, di sini saya fokus ke konten) -->
-    <main class="flex-1 p-8 overflow-y-auto">
-        <div class="mb-8">
-            <a href="{{ route('penempatan.index') }}" class="inline-flex items-center gap-2 text-[14px] text-gray-500 hover:text-[#086b50] transition mb-3 font-medium">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                Kembali ke Data Penempatan
-            </a>
-            <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Edit Data Kandidat</h2>
-            <p class="text-gray-500 mt-2 text-[15px]">Perbarui informasi kandidat: {{ $penempatan->nama }}</p>
-        </div>
+    <div class="mb-6">
+        <a href="{{ route('penempatan.index') }}" class="text-[#086b50] hover:underline font-medium text-[14px] flex items-center gap-1">
+            &larr; Kembali ke Daftar Penempatan
+        </a>
+    </div>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden max-w-4xl">
-            <!-- Arahkan Action ke Route Update dan gunakan method PUT -->
-            <form action="{{ route('penempatan.update', $penempatan->id) }}" method="POST" class="p-8">
-                @csrf
-                @method('PUT')
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    <div class="col-span-1">
-                        <label class="block text-[14px] font-semibold text-gray-700 mb-2">Nama Lengkap</label>
-                        <input type="text" name="nama" value="{{ old('nama', $penempatan->nama) }}" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-[#F8FAFC] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#086b50]/20 focus:border-[#086b50]">
-                    </div>
-                    <div class="col-span-1">
-                        <label class="block text-[14px] font-semibold text-gray-700 mb-2">NIK</label>
-                        <input type="text" name="nik" value="{{ old('nik', $penempatan->nik) }}" required 
-                        minlength="16" 
-                        maxlength="16" 
-                        pattern="\d{16}" 
-                        title="Peringatan: NIK harus terdiri dari tepat 16 digit angka!"
-                        onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-[#F8FAFC] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#086b50]/20 focus:border-[#086b50]">
-                    
-                    <div class="col-span-1 md:col-span-2 py-2"><hr class="border-gray-100"></div>
+    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-3xl mx-auto">
+        <h2 class="text-2xl font-bold text-gray-900 tracking-tight mb-6">Ubah Data Penempatan</h2>
 
-                    <div class="col-span-1">
-                        <label class="block text-[14px] font-semibold text-gray-700 mb-2">Posisi</label>
-                        <input type="text" name="posisi" value="{{ old('posisi', $penempatan->posisi) }}" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-[#F8FAFC] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#086b50]/20 focus:border-[#086b50]">
-                    </div>
-                    <div class="col-span-1">
-                        <label class="block text-[14px] font-semibold text-gray-700 mb-2">Pemberi Kerja</label>
-                        <input type="text" name="pemberi_kerja" value="{{ old('pemberi_kerja', $penempatan->pemberi_kerja) }}" required class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-[#F8FAFC] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#086b50]/20 focus:border-[#086b50]">
-                    </div>
-                    <div class="col-span-1">
-                        <label class="block text-[14px] font-semibold text-gray-700 mb-2">Tanggal Penempatan</label>
-                        <input type="date" name="tanggal" value="{{ old('tanggal', $penempatan->tanggal_penempatan) }}" class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-[#F8FAFC] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#086b50]/20 focus:border-[#086b50]">
-                    </div>
-                    <div class="col-span-1">
-                        <label class="block text-[14px] font-semibold text-gray-700 mb-2">Status Kerja</label>
-                        <div class="relative">
-                            <select name="status" required class="w-full appearance-none px-4 py-3 rounded-xl border border-gray-200 bg-[#F8FAFC] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#086b50]/20 focus:border-[#086b50] cursor-pointer">
-                                <option value="Seleksi" {{ $penempatan->status == 'Seleksi' ? 'selected' : '' }}>Seleksi</option>
-                                <option value="Diterima" {{ $penempatan->status == 'Diterima' ? 'selected' : '' }}>Diterima</option>
-                                <option value="Bekerja" {{ $penempatan->status == 'Bekerja' ? 'selected' : '' }}>Bekerja</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                        </div>
-                    </div>
+        @if(session('error'))
+            <div class="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <form action="{{ route('penempatan.update', $penempatan->id) }}" method="POST" class="space-y-5">
+            @csrf
+            @method('PUT')
+
+            <!-- Pilih Kandidat -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Kandidat (Masyarakat) <span class="text-red-500">*</span></label>
+                <select name="masyarakat_id" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-[#086b50] focus:border-[#086b50] text-[14px] text-gray-700 bg-gray-50" required>
+                    @foreach($daftarMasyarakat as $orang)
+                        <option value="{{ $orang->id }}" @selected(old('masyarakat_id', $penempatan->masyarakat_id) == $orang->id)>
+                            {{ $orang->nik }} - {{ $orang->nama }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('masyarakat_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+
+            <!-- Pilih Program -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Posisi / Program <span class="text-red-500">*</span></label>
+                <select name="program_id" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-[#086b50] focus:border-[#086b50] text-[14px] text-gray-700 bg-gray-50" required>
+                    @foreach($daftarProgram as $prog)
+                        <option value="{{ $prog->id }}" @selected(old('program_id', $penempatan->program_id) == $prog->id)>
+                            {{ $prog->nama }} ({{ $prog->mitra->nama ?? $prog->penyelenggara }})
+                        </option>
+                    @endforeach
+                </select>
+                @error('program_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="grid grid-cols-2 gap-5">
+                <!-- Tanggal Penempatan -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Penempatan</label>
+                    <input type="date" name="tanggal_penempatan" 
+                           value="{{ old('tanggal_penempatan', $penempatan->tanggal_penempatan) }}" 
+                           class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-[#086b50] focus:border-[#086b50] text-[14px] text-gray-700 bg-gray-50">
+                    @error('tanggal_penempatan') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
 
-                <div class="mt-10 flex items-center justify-end gap-4 pt-6 border-t border-gray-100">
-                    <a href="{{ route('penempatan.index') }}" class="px-6 py-2.5 rounded-full text-[14px] font-semibold text-gray-600 hover:bg-gray-100 transition">Batal</a>
-                    <button type="submit" class="bg-[#086b50] hover:bg-[#06503c] text-white px-8 py-2.5 rounded-full font-semibold text-[14px] shadow-sm transition">
-                        Perbarui Data
-                    </button>
+                <!-- Status -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status Penempatan <span class="text-red-500">*</span></label>
+                    <select name="status" class="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-[#086b50] focus:border-[#086b50] text-[14px] text-gray-700 bg-gray-50" required>
+                        <option value="Seleksi" @selected(old('status', $penempatan->status) == 'Seleksi')>Seleksi</option>
+                        <option value="Diterima" @selected(old('status', $penempatan->status) == 'Diterima')>Diterima</option>
+                        <option value="Bekerja" @selected(old('status', $penempatan->status) == 'Bekerja')>Bekerja</option>
+                        <option value="Ditolak" @selected(old('status', $penempatan->status) == 'Ditolak')>Ditolak</option>
+                    </select>
+                    @error('status') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                 </div>
-            </form>
-        </div>
-    </main>
-</body>
-</html>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                <a href="{{ route('penempatan.index') }}" class="px-5 py-2 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg text-[14px] font-medium transition">Batal</a>
+                <button type="submit" class="px-5 py-2 bg-[#086b50] hover:bg-[#06503c] text-white rounded-lg text-[14px] font-medium transition">Simpan Perubahan</button>
+            </div>
+        </form>
+    </div>
+@endsection

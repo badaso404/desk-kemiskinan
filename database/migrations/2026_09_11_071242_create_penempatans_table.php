@@ -10,12 +10,12 @@ return new class extends Migration
     {
         Schema::create('penempatans', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('nik', 16);
-            $table->string('posisi');
-            $table->string('pemberi_kerja');
+            // Menghubungkan kandidat (masyarakat) dan posisi (program)
+            $table->foreignId('masyarakat_id')->constrained('masyarakats')->cascadeOnDelete();
+            $table->foreignId('program_id')->constrained('programs')->cascadeOnDelete();
+            
             $table->date('tanggal_penempatan')->nullable();
-            $table->string('status'); // Seleksi, Bekerja, Diterima
+            $table->enum('status', ['Seleksi', 'Diterima', 'Bekerja', 'Ditolak'])->default('Seleksi');
             $table->timestamps();
         });
     }

@@ -21,11 +21,7 @@
             <h2 class="text-3xl font-bold text-gray-900 tracking-tight">PENEMPATAN</h2>
             <p class="text-gray-500 mt-2 text-[15px]">Pantau dan kelola penempatan tenaga kerja.</p>
         </div>
-        
-        <!-- Tombol Tambah Data -->
-        <a href="{{ route('penempatan.create') }}" class="bg-[#086b50] hover:bg-[#06503c] text-white px-5 py-2.5 rounded-full font-medium text-[14px] shadow transition flex items-center gap-1 cursor-pointer">
-            <span class="text-lg leading-none mb-0.5">+</span> Tambah Data
-        </a>
+
     </div>
 
     <!-- Summary Cards -->
@@ -145,15 +141,16 @@
                                 </span>
                             </td>
                             
-                            <!-- Kolom Aksi (Tombol Edit & View) -->
-                            <td class="px-6 py-4 text-center space-x-3">
-                                <a href="{{ route('penempatan.edit', $item->id) }}" class="text-gray-400 hover:text-[#086b50] transition inline-block" title="Edit Data">
-                                    <svg class="w-[18px] h-[18px] inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                           <td class="px-6 py-4">
+                            <div class="flex items-center justify-center gap-3">
+                                <a href="{{ route('penempatan.edit', $item->id) }}" class="text-gray-400 hover:text-[#086b50] transition" title="Edit Data">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </a>
-                                <a href="{{ route('penempatan.show', $item->id) }}" class="text-gray-400 hover:text-[#086b50] transition inline-block" title="Lihat Detail">
-                                    <svg class="w-[18px] h-[18px] inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                <a href="{{ route('penempatan.show', $item->id) }}" class="text-gray-400 hover:text-[#086b50] transition" title="Lihat Detail">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </a>
-                            </td>
+                            </div>
+                          </td>
                         </tr>
                     @empty
                         <!-- Tampilan Jika Data Kosong -->
