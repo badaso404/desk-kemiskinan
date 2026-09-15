@@ -21,7 +21,7 @@
 
 <div class="tabs">
     <a href="{{ route('admin.pemberdayaan') }}" class="tab {{ $tab === 'mitra' ? 'is-active' : '' }}">
-        Penyelenggara ({{ $mitra->count() }})
+        Penyelenggara ({{ $ringkasan['ukpd'] + $ringkasan['csr'] }})
     </a>
     <a href="{{ route('admin.pemberdayaan', ['tab' => 'program']) }}" class="tab {{ $tab === 'program' ? 'is-active' : '' }}">
         Program ({{ $program->count() }})
@@ -30,13 +30,26 @@
 
 @if ($tab === 'mitra')
     <section class="card">
-        <div class="card-head">
+        <div class="card-head" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <h2>Penyelenggara Program</h2>
-            <a href="{{ route('admin.mitra.create') }}" class="btn-primary">+ Tambah Penyelenggara</a>
+            
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Form Filter -->
+                <form action="{{ route('admin.pemberdayaan') }}" method="GET" style="margin: 0;">
+                    <input type="hidden" name="tab" value="mitra">
+                    <select name="jenis" onchange="this.form.submit()" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;">
+                        <option value="">Semua Jenis</option>
+                        <option value="UKPD" {{ request('jenis') === 'UKPD' ? 'selected' : '' }}>Hanya UKPD</option>
+                        <option value="CSR" {{ request('jenis') === 'CSR' ? 'selected' : '' }}>Hanya CSR</option>
+                    </select>
+                </form>
+
+                <a href="{{ route('admin.mitra.create') }}" class="btn-primary">+ Tambah Penyelenggara</a>
+            </div>
         </div>
 
         @if ($mitra->isEmpty())
-            <p class="empty-state">Belum ada penyelenggara terdaftar. Tambahkan UKPD atau perusahaan CSR terlebih dahulu.</p>
+            <p class="empty-state">Belum ada penyelenggara terdaftar atau tidak ada data yang sesuai filter.</p>
         @else
             <div class="table-scroll">
                 <table class="data-table">
