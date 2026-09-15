@@ -67,6 +67,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/pemberdayaan/program/create', [ProgramController::class, 'create'])->name('program.create');
     Route::post('/pemberdayaan/program', [ProgramController::class, 'store'])->name('program.store');
+    Route::get('/pemberdayaan/program/{program}', [ProgramController::class, 'show'])->name('program.show');
     Route::get('/pemberdayaan/program/{program}/edit', [ProgramController::class, 'edit'])->name('program.edit');
     Route::put('/pemberdayaan/program/{program}', [ProgramController::class, 'update'])->name('program.update');
     Route::delete('/pemberdayaan/program/{program}', [ProgramController::class, 'destroy'])->name('program.destroy');
