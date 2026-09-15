@@ -140,4 +140,10 @@ class MasyarakatController extends Controller
 
         return redirect()->route('admin.masyarakat')->with('error', 'Data tidak ditemukan!');
     }
+
+    public function show($id)
+{
+    $masyarakat = Masyarakat::findOrFail($id);
+    return view('admin.masyarakat_show', compact('masyarakat'));
+}
 }

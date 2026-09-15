@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\PelatihanController;
 use App\Http\Controllers\MasyarakatController;
+use App\Http\Controllers\MonitoringController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenempatanController;
 /*
@@ -54,6 +55,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/masyarakat/{id}/edit', [MasyarakatController::class, 'edit'])->name('masyarakat.edit');
     Route::put('/masyarakat/{id}', [MasyarakatController::class, 'update'])->name('masyarakat.update');
     Route::delete('/masyarakat/{id}', [MasyarakatController::class, 'destroy'])->name('masyarakat.destroy');
+    Route::get('/masyarakat/{id}', [MasyarakatController::class, 'show'])->name('masyarakat.show');
 
     // Pemberdayaan: penyelenggara (UKPD/CSR) dan program
     Route::get('/pemberdayaan', [PemberdayaanController::class, 'index'])->name('pemberdayaan');
@@ -74,6 +76,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     // Rekomendasi: pencocokan warga dengan program
     Route::get('/rekomendasi', [RekomendasiController::class, 'index'])->name('rekomendasi.index');
     Route::get('/rekomendasi/{masyarakat}', [RekomendasiController::class, 'show'])->name('rekomendasi.show');
+
+    // Route Monitoring
+    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
 });
 
 /*
