@@ -26,6 +26,13 @@ class ProgramController extends Controller
             ->with('sukses', 'Program berhasil ditambahkan.');
     }
 
+    public function show(Program $program)
+    {
+        $program->load('mitra');
+
+        return view('admin.pemberdayaan.program-detail', compact('program'));
+    }
+
     public function edit(Program $program)
     {
         return view('admin.pemberdayaan.program-form', [
