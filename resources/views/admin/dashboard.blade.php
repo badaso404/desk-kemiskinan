@@ -3,9 +3,34 @@
 @section('title', 'Dashboard')
 
 @section('content')
+@php
+    $userRole = auth()->user()->role ?? 'admin';
+
+    // Mapping Nama Role untuk Judul Utama Selamat Datang
+    $roleLabels = [
+        'admin'          => 'Administrator',
+        'kecamatan'      => 'Kecamatan',
+        'pimpinan_kesra' => 'Pimpinan Kesra',
+        'kelurahan'      => 'Kelurahan',
+        'walikota'       => 'Walikota',
+    ];
+
+    // Subtitle Deskripsi Sesuai Role
+    $roleDescriptions = [
+        'admin'          => 'Kelola pendataan warga dan penyelenggaraan program pemberdayaan secara penuh.',
+        'kecamatan'      => 'Kelola pendataan warga dan monitoring program pemberdayaan wilayah Kecamatan.',
+        'pimpinan_kesra' => 'Kelola dan koordinasikan program penanggulangan kemiskinan dan Kesra.',
+        'kelurahan'      => 'Pendataan dan verifikasi awal berkas warga di tingkat Kelurahan.',
+        'walikota'       => 'Ringkasan eksekutif monitoring data kemiskinan dan statistik penempatan warga.',
+    ];
+
+    $namaRole = $roleLabels[$userRole] ?? 'Pengguna';
+    $descRole = $roleDescriptions[$userRole] ?? 'Kelola pendataan warga dan penyelenggaraan program pemberdayaan.';
+@endphp
+
 <div class="page-head">
-    <h1>Selamat Datang, {{ auth()->user()->name }}</h1>
-    <p>Kelola pendataan warga dan penyelenggaraan program pemberdayaan.</p>
+    <h1>Selamat Datang, {{ $namaRole }}</h1>
+    <p>{{ $descRole }}</p>
 </div>
 
 <!-- KARTU RINGKASAN -->
@@ -106,20 +131,24 @@
     <article class="card">
         <div class="card-head">
             <h2>Pendaftaran Dibuka</h2>
-            <a href="{{ route('admin.pemberdayaan', ['tab' => 'program']) }}" class="card-link">Kelola</a>
+            @if(in_array($userRole, ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan']))
+                <a href="{{ route('admin.pemberdayaan', ['tab' => 'program']) }}" class="card-link">Kelola</a>
+            @endif
         </div>
         <div class="reco-list">
             @forelse ($programTerbuka as $program)
                 <div class="reco-item">
                     <div>
                         <strong>{{ $program->nama }}</strong>
-                        <span>{{ $program->sisa_kuota }} kursi tersisa &middot; mulai {{ $program->tanggal_mulai->format('d M') }}</span>
+                        <span>{{ $program->sisa_kuota }} kursi tersisa &middot; mulai {{ \Carbon\Carbon::parse($program->tanggal_mulai)->format('d M') }}</span>
                     </div>
-                    <a href="{{ route('admin.program.edit', $program) }}" class="reco-go" aria-label="Kelola {{ $program->nama }}">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M13 6l6 6-6 6"/>
-                        </svg>
-                    </a>
+                    @if(in_array($userRole, ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan']))
+                        <a href="{{ route('admin.program.edit', $program) }}" class="reco-go" aria-label="Kelola {{ $program->nama }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M13 6l6 6-6 6"/>
+                            </svg>
+                        </a>
+                    @endif
                 </div>
             @empty
                 <p class="empty-state">Belum ada program yang membuka pendaftaran.</p>
@@ -130,7 +159,9 @@
     <article class="card">
         <div class="card-head">
             <h2>Warga Terbaru</h2>
-            <a href="{{ route('admin.masyarakat') }}" class="card-link">Lihat Semua</a>
+            @if(in_array($userRole, ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan']))
+                <a href="{{ route('admin.masyarakat') }}" class="card-link">Lihat Semua</a>
+            @endif
         </div>
         <div class="table-scroll">
             <table class="data-table">
@@ -140,7 +171,9 @@
                         <th>Kecamatan</th>
                         <th>Keahlian</th>
                         <th>Minat Pelatihan</th>
-                        <th>Aksi</th>
+                        @if(in_array($userRole, ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan']))
+                            <th>Aksi</th>
+                        @endif
                     </tr>
                 </thead>
                 <tbody>
@@ -150,12 +183,14 @@
                             <td>{{ $warga->kecamatan }}</td>
                             <td>{{ $warga->keahlian ?: '—' }}</td>
                             <td>{{ $warga->minat_pelatihan ?: '—' }}</td>
-                            <td class="cell-aksi">
-                                <a href="{{ route('admin.rekomendasi.show', $warga) }}" class="btn-link">Rekomendasi</a>
-                            </td>
+                            @if(in_array($userRole, ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan']))
+                                <td class="cell-aksi">
+                                    <a href="{{ route('admin.rekomendasi.show', $warga) }}" class="btn-link">Rekomendasi</a>
+                                </td>
+                            @endif
                         </tr>
                     @empty
-                        <tr><td colspan="5"><p class="empty-state">Belum ada warga terdata.</p></td></tr>
+                        <tr><td colspan="{{ in_array($userRole, ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan']) ? 5 : 4 }}"><p class="empty-state">Belum ada warga terdata.</p></td></tr>
                     @endforelse
                 </tbody>
             </table>

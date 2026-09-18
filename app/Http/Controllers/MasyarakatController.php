@@ -32,11 +32,15 @@ class MasyarakatController extends Controller
 
         $masyarakat = $query->latest()->paginate(10)->withQueryString();
 
+        // RINGKASAN DATA DISESUAIKAN DENGAN KARTU STATISTIK BARU
         $ringkasan = [
-            'total_masyarakat' => Masyarakat::count(),
-            'butuh_pekerjaan'  => Masyarakat::whereIn('status_pekerjaan', ['Belum / Tidak Bekerja', 'Terkena PHK'])->count(),
-            'sudah_bekerja'    => Masyarakat::whereNotIn('status_pekerjaan', ['Belum / Tidak Bekerja', 'Terkena PHK'])->count(),
-            'dalam_pelatihan'  => Masyarakat::whereNotNull('minat_pelatihan')->where('minat_pelatihan', '!=', '')->count(),
+            'total_masyarakat'   => Masyarakat::count(),
+            'sudah_bekerja'      => Masyarakat::whereNotIn('status_pekerjaan', ['Belum / Tidak Bekerja', 'Terkena PHK'])->count(),
+            'belum_verifikasi'   => Masyarakat::where(function($q) {
+                                        $q->where('status_verifikasi', '!=', 'Terverifikasi')
+                                          ->orWhereNull('status_verifikasi');
+                                    })->count(),
+            'terverifikasi'      => Masyarakat::where('status_verifikasi', 'Terverifikasi')->count(),
         ];
 
         $wilayahList = ['Cengkareng', 'Grogol Petamburan', 'Kalideres', 'Kebon Jeruk', 'Kembangan', 'Palmerah', 'Taman Sari', 'Tambora'];
@@ -46,7 +50,7 @@ class MasyarakatController extends Controller
 
     public function create()
     {
-        return view('masyarakat_create');
+        return view('admin.masyarakat_create'); // Disesuaikan dengan struktur folder view Anda
     }
 
     public function store(Request $request)
@@ -76,9 +80,12 @@ class MasyarakatController extends Controller
             'keahlian' => 'required|string',
             'sertifikat' => 'nullable|array',
             'minat_pelatihan' => 'nullable|string',
+            'status_verifikasi' => 'nullable|in:Pending,Terverifikasi', // TAMBAHAN VALIDASI STATUS VERIFIKASI
         ]);
 
         $validated['jumlah_tanggungan'] = $validated['jumlah_tanggungan'] ?? 0;
+        // Default ke 'Pending' jika tidak diisi
+        $validated['status_verifikasi'] = $validated['status_verifikasi'] ?? 'Pending'; 
 
         Masyarakat::create($validated);
 
@@ -120,6 +127,7 @@ class MasyarakatController extends Controller
             'keahlian' => 'required|string',
             'sertifikat' => 'nullable|array',
             'minat_pelatihan' => 'nullable|string',
+            'status_verifikasi' => 'nullable|in:Pending,Terverifikasi',
         ]);
 
         $validated['jumlah_tanggungan'] = $validated['jumlah_tanggungan'] ?? 0;
@@ -142,8 +150,18 @@ class MasyarakatController extends Controller
     }
 
     public function show($id)
+    {
+        $masyarakat = Masyarakat::findOrFail($id);
+        return view('admin.masyarakat_show', compact('masyarakat'));
+    }
+
+    public function verify($id)
 {
     $masyarakat = Masyarakat::findOrFail($id);
-    return view('admin.masyarakat_show', compact('masyarakat'));
+    $masyarakat->update([
+        'status_verifikasi' => 'Terverifikasi'
+    ]);
+
+    return redirect()->back()->with('success', 'Data masyarakat berhasil diverifikasi!');
 }
 }

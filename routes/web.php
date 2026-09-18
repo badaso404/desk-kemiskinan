@@ -56,6 +56,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::put('/masyarakat/{id}', [MasyarakatController::class, 'update'])->name('masyarakat.update');
     Route::delete('/masyarakat/{id}', [MasyarakatController::class, 'destroy'])->name('masyarakat.destroy');
     Route::get('/masyarakat/{id}', [MasyarakatController::class, 'show'])->name('masyarakat.show');
+    Route::patch('/masyarakat/{id}/verify', [MasyarakatController::class, 'verify'])->name('masyarakat.verify');
 
     // Pemberdayaan: penyelenggara (UKPD/CSR) dan program
     Route::get('/pemberdayaan', [PemberdayaanController::class, 'index'])->name('pemberdayaan');
@@ -95,3 +96,20 @@ Route::middleware('auth')->group(function () {
     Route::put('/penempatan/{id}', [PenempatanController::class, 'update'])->name('penempatan.update');
     Route::get('/penempatan/{id}', [PenempatanController::class, 'show'])->name('penempatan.show');
 });
+
+use Illuminate\Http\Request;
+
+// Route Cepat untuk Mengubah Role User Login
+Route::post('/switch-role', function (Request $request) {
+    $request->validate([
+        'role' => 'required|in:admin,kecamatan,pimpinan_kesra,kelurahan,walikota',
+    ]);
+
+    $user = auth()->user();
+    if ($user) {
+        $user->role = $request->role;
+        $user->save();
+    }
+
+    return back();
+})->name('switch.role')->middleware('auth');

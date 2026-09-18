@@ -13,13 +13,13 @@
     .form-group-full { grid-column: span 2; }
     .form-label { display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
     .form-input, .form-select, .form-textarea { width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1.5px solid #e2e8f0; background-color: #f8fafc; color: #1e293b; font-size: 0.95rem; outline: none; box-sizing: border-box; transition: all 0.2s ease; }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #047857; background-color: #fff; box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.1); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #12395B; background-color: #fff; box-shadow: 0 0 0 4px rgba(18, 57, 91, 0.1); }
     .radio-flex { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; margin-top: 0.5rem; }
     .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem; }
     .custom-option { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.925rem; color: #334155; }
-    .custom-option input { width: 18px; height: 18px; accent-color: #047857; }
-    .btn-submit { background-color: #047857; color: #fff; padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
-    .btn-submit:hover { background-color: #065f46; }
+    .custom-option input { width: 18px; height: 18px; accent-color: #12395B; }
+    .btn-submit { background-color: #12395B; color: #fff; padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn-submit:hover { background-color: #0d2a43; }
     .btn-cancel { background-color: #f1f5f9; color: #475569; padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-block; transition: background 0.2s; }
     .btn-cancel:hover { background-color: #e2e8f0; }
 
@@ -30,9 +30,25 @@
 </style>
 
 @php
-    // Helper untuk konversi array JSON ke PHP Array agar checkbox dapat dibaca
-    $bantuanSelected = is_array($masyarakat->bantuan) ? $masyarakat->bantuan : (json_decode($masyarakat->bantuan, true) ?? []);
-    $sertifikatSelected = is_array($masyarakat->sertifikat) ? $masyarakat->sertifikat : (json_decode($masyarakat->sertifikat, true) ?? []);
+    // Helper fleksibel untuk mengekstrak array (Mendukung JSON Array, PHP Array, maupun String dipisah koma)
+    $parseArrayData = function($data) {
+        if (is_array($data)) return $data;
+        if (is_string($data) && $data !== '') {
+            $decoded = json_decode($data, true);
+            if (is_array($decoded)) return $decoded;
+            return array_map('trim', explode(',', $data));
+        }
+        return [];
+    };
+
+    $bantuanSelected = $parseArrayData($masyarakat->bantuan);
+    $sertifikatSelected = $parseArrayData($masyarakat->sertifikat);
+    
+    $oldBantuan = old('bantuan', $bantuanSelected);
+    $oldSertifikat = old('sertifikat', $sertifikatSelected);
+    
+    if (!is_array($oldBantuan)) $oldBantuan = [];
+    if (!is_array($oldSertifikat)) $oldSertifikat = [];
 @endphp
 
 <div class="form-wrapper">
@@ -81,7 +97,7 @@
                 </div>
                 <div>
                     <label class="form-label">Tanggal Lahir *</label>
-                    <input type="date" name="tanggal_lahir" class="form-input" value="{{ old('tanggal_lahir', $masyarakat->tanggal_lahir ? $masyarakat->tanggal_lahir->format('Y-m-d') : '') }}" required>
+                    <input type="date" name="tanggal_lahir" class="form-input" value="{{ old('tanggal_lahir', $masyarakat->tanggal_lahir ? \Carbon\Carbon::parse($masyarakat->tanggal_lahir)->format('Y-m-d') : '') }}" required>
                 </div>
                 <div>
                     <label class="form-label">Nomor Handphone (Aktif) *</label>
@@ -89,7 +105,7 @@
                 </div>
                 <div>
                     <label class="form-label">Kecamatan *</label>
-                    <select name="kecamatan" class="form-select" required>
+                    <select name="kecamatan" id="kecamatanSelect" class="form-select" onchange="updateKelurahanOptions()" required>
                         <option value="">Pilih Kecamatan</option>
                         @foreach(['Cengkareng', 'Grogol Petamburan', 'Kalideres', 'Kebon Jeruk', 'Kembangan', 'Palmerah', 'Taman Sari', 'Tambora'] as $kec)
                             <option value="{{ $kec }}" {{ old('kecamatan', $masyarakat->kecamatan) == $kec ? 'selected' : '' }}>{{ $kec }}</option>
@@ -98,7 +114,9 @@
                 </div>
                 <div>
                     <label class="form-label">Kelurahan / Desa *</label>
-                    <input type="text" name="kelurahan" class="form-input" value="{{ old('kelurahan', $masyarakat->kelurahan) }}" required>
+                    <select name="kelurahan" id="kelurahanSelect" class="form-select" required>
+                        <option value="">Pilih Kecamatan Terlebih Dahulu</option>
+                    </select>
                 </div>
                 <div class="form-group-full">
                     <label class="form-label">Alamat Domisili Lengkap *</label>
@@ -201,7 +219,7 @@
                     <div class="checkbox-grid">
                         @foreach(['PKH', 'BPNT', 'KJP Plus', 'Kartu Prakerja'] as $bnt)
                             <label class="custom-option">
-                                <input type="checkbox" name="bantuan[]" value="{{ $bnt }}" {{ in_array($bnt, old('bantuan', $bantuanSelected)) ? 'checked' : '' }}> {{ $bnt }}
+                                <input type="checkbox" name="bantuan[]" value="{{ $bnt }}" {{ in_array($bnt, $oldBantuan) ? 'checked' : '' }}> {{ $bnt }}
                             </label>
                         @endforeach
                     </div>
@@ -233,7 +251,7 @@
                     <div class="checkbox-grid">
                         @foreach(['SIM A', 'SIM B1/B2', 'SIM C', 'Sertifikat BNSP'] as $sert)
                             <label class="custom-option">
-                                <input type="checkbox" name="sertifikat[]" value="{{ $sert }}" {{ in_array($sert, old('sertifikat', $sertifikatSelected)) ? 'checked' : '' }}> {{ $sert }}
+                                <input type="checkbox" name="sertifikat[]" value="{{ $sert }}" {{ in_array($sert, $oldSertifikat) ? 'checked' : '' }}> {{ $sert }}
                             </label>
                         @endforeach
                     </div>
@@ -257,4 +275,57 @@
         </form>
     </div>
 </div>
+
+<script>
+    // DATA KELURAHAN CASCADING JAKARTA BARAT
+    const kelurahanData = {
+        "Cengkareng": ["Cengkareng Barat", "Cengkareng Timur", "Duri Kosambi", "Kapuk", "Kedaung Kali Angke", "Rawa Buaya"],
+        "Grogol Petamburan": ["Grogol", "Jelambar", "Jelambar Baru", "Tanjung Duren Selatan", "Tanjung Duren Utara", "Tomang", "Wijaya Kusuma"],
+        "Kalideres": ["Kalideres", "Kamal", "Pegadungan", "Semanan", "Tegal Alur"],
+        "Kebon Jeruk": ["Duri Kepa", "Kebon Jeruk", "Kedoya Selatan", "Kedoya Utara", "Kelapa Dua", "Sukabumi Selatan", "Sukabumi Utara"],
+        "Kembangan": ["Joglo", "Kembangan Selatan", "Kembangan Utara", "Meruya Selatan", "Meruya Utara", "Srengseng"],
+        "Palmerah": ["Jatipulo", "Kemanggisan", "Kota Bambu Selatan", "Kota Bambu Utara", "Palmerah", "Slipi"],
+        "Taman Sari": ["Glodok", "Keagungan", "Krukut", "Mangga Besar", "Maphar", "Pinangsia", "Taman Sari", "Tangki"],
+        "Tambora": ["Angke", "Duri Selatan", "Duri Utara", "Jembatan Besi", "Jembatan Lima", "Kali Anyar", "Krendang", "Pekojan", "Roa Malaka", "Tambora", "Tanah Sereal"]
+    };
+
+    function updateKelurahanOptions(selectedKelurahan = '') {
+        const kecamatanSelect = document.getElementById('kecamatanSelect');
+        const kelurahanSelect = document.getElementById('kelurahanSelect');
+        const selectedKecamatan = kecamatanSelect.value;
+
+        kelurahanSelect.innerHTML = '';
+
+        if (!selectedKecamatan || !kelurahanData[selectedKecamatan]) {
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.innerText = 'Pilih Kecamatan Terlebih Dahulu';
+            kelurahanSelect.appendChild(defaultOpt);
+            return;
+        }
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.innerText = 'Pilih Kelurahan';
+        kelurahanSelect.appendChild(defaultOpt);
+
+        kelurahanData[selectedKecamatan].forEach(kel => {
+            const opt = document.createElement('option');
+            opt.value = kel;
+            opt.innerText = kel;
+            if (selectedKelurahan && selectedKelurahan === kel) {
+                opt.selected = true;
+            }
+            kelurahanSelect.appendChild(opt);
+        });
+    }
+
+    // OTOMATIS LOAD DROPDOWN KELURAHAN DENGAN DATA YANG SUDAH TERSEDIA SAAT PERTAMA LOAD
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentKelurahan = "{{ old('kelurahan', $masyarakat->kelurahan) }}";
+        if (document.getElementById('kecamatanSelect').value) {
+            updateKelurahanOptions(currentKelurahan);
+        }
+    });
+</script>
 @endsection

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Rekomendasi - ' . $warga->nama)
-
+ 
 @section('content')
 <style>
     /* UTILITY & COLOR PALETTE (#12395B PRIMARY) */

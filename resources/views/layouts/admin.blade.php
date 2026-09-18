@@ -41,7 +41,65 @@
             transition: transform 0.3s ease;
         }
 
-        /* KONSISTENSI SERAGAM UNTUK SETIAP OPSI MENU NAVIGASI */
+        /* BRAND / LOGO SIDEBAR */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            color: #ffffff;
+        }
+
+        .brand-text strong {
+            font-size: 0.95rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .brand-text span {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        /* WIDGET ROLE SWITCHER */
+        .role-switcher-box {
+            padding: 0.6rem 0.75rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            margin: 0.85rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .role-switcher-label {
+            display: block;
+            font-size: 0.68rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.5px;
+        }
+
+        .role-switcher-select {
+            width: 100%;
+            padding: 0.45rem 0.6rem;
+            border-radius: 6px;
+            background: #0b2238;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.825rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            font-family: inherit;
+        }
+
+        /* KONSISTENSI MENU NAVIGASI */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -88,6 +146,43 @@
             color: #ffffff !important;
             font-weight: 600;
         }
+
+        /* FOOTER SIDEBAR */
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-bantuan {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            text-decoration: none;
+            padding: 0.4rem 0.5rem;
+            transition: color 0.2s ease;
+        }
+        .btn-bantuan:hover { color: #ffffff; }
+
+        .btn-keluar {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f87171;
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+        .btn-keluar:hover { background-color: rgba(248, 113, 113, 0.12); }
+        .btn-keluar svg { width: 18px; height: 18px; }
 
         /* AREA UTAMA DESKTOP */
         .admin-main {
@@ -157,39 +252,15 @@
             color: #12395B;
         }
 
-        /* MEDIA QUERIES RESPONSIVE MOBILE (< 768px) */
+        /* RESPONSIVE MOBILE (< 768px) */
         @media (max-width: 768px) {
-            .mobile-topbar {
-                display: flex;
-            }
-
-            .sidebar-overlay.show {
-                display: block;
-                opacity: 1;
-            }
-
-            .admin-sidebar {
-                transform: translateX(-100%);
-                width: 270px;
-            }
-
-            .admin-sidebar.show {
-                transform: translateX(0);
-            }
-
-            .admin-main {
-                margin-left: 0;
-                padding-top: 60px;
-            }
-
-            .admin-content {
-                padding: 1.25rem;
-            }
-
-            /* MEMASTIKAN LEBAR DAN PADDING HOVER TETAP KONSISTEN DI MOBILE */
-            .sidebar-nav .nav-link {
-                padding: 0.8rem 1rem !important;
-            }
+            .mobile-topbar { display: flex; }
+            .sidebar-overlay.show { display: block; opacity: 1; }
+            .admin-sidebar { transform: translateX(-100%); width: 270px; }
+            .admin-sidebar.show { transform: translateX(0); }
+            .admin-main { margin-left: 0; padding-top: 60px; }
+            .admin-content { padding: 1.25rem; }
+            .sidebar-nav .nav-link { padding: 0.8rem 1rem !important; }
         }
     </style>
 </head>
@@ -211,67 +282,117 @@
         <img src="{{ asset('images/Logo-Jakarta.png') }}" alt="Logo Jakbar" style="width: 32px; height: 32px; object-fit: contain;">
     </header>
 
+    @php
+        $userRole = auth()->user()->role ?? '';
+
+        $brandTitles = [
+            'admin'          => 'Panel Admin',
+            'kecamatan'      => 'Panel Kecamatan',
+            'pimpinan_kesra' => 'Panel Kesra',
+            'kelurahan'      => 'Panel Kelurahan',
+            'walikota'       => 'Panel Walikota',
+        ];
+
+        $currentBrandTitle = $brandTitles[$userRole] ?? 'Desk Kemiskinan';
+    @endphp
+
     <!-- SIDEBAR UTAMA -->
     <aside class="admin-sidebar" id="adminSidebar">
-        <div class="sidebar-brand">
-            <div class="brand-logo">
-                <img src="{{ asset('images/Logo-Jakarta.png') }}" alt="Logo App" style="width: 36px; height: 36px; object-fit: contain;">
+        <div>
+            <!-- BRAND LOGO -->
+            <div class="sidebar-brand">
+                <div class="brand-logo">
+                    <img src="{{ asset('images/Logo-Jakarta.png') }}" alt="Logo App" style="width: 36px; height: 36px; object-fit: contain;">
+                </div>
+                <div class="brand-text">
+                    <strong>{{ $currentBrandTitle }}</strong>
+                    <span>Kota Jakarta Barat</span>
+                </div>
             </div>
-            <div class="brand-text">
-                <strong>Panel Admin</strong>
-                <span>Kota Jakarta Barat</span>
-            </div>
-        </div>
 
-        <nav class="sidebar-nav">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'is-active' : '' }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                </svg>
-                <span>Dashboard</span>
-            </a>
-            <a href="{{ route('admin.masyarakat') }}" class="nav-link {{ request()->routeIs('admin.masyarakat*') ? 'is-active' : '' }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 12v4c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-4"/>
-                </svg>
-                <span>Data Masyarakat</span>
-            </a>
-            <a href="{{ route('admin.pemberdayaan') }}" class="nav-link {{ request()->routeIs('admin.pemberdayaan') ? 'is-active' : '' }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/>
-                    <path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/><path d="M17 14c2.3 0 4 1.6 4 4"/>
-                </svg>
-                <span>Pemberdayaan</span>
-            </a>
-            <a href="{{ route('admin.rekomendasi.index') }}" class="nav-link {{ request()->routeIs('admin.rekomendasi*') ? 'is-active' : '' }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-                <span>Rekomendasi Program</span>
-            </a>
-            <a href="{{ route('penempatan.index') }}" class="nav-link {{ request()->routeIs('penempatan.*') ? 'is-active' : '' }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <rect x="3" y="3" width="18" height="18" rx="2.5"/>
-                    <path d="M8 16v-5M12 16v-8M16 16v-3"/>
-                </svg>
-                <span>Penempatan</span>
-            </a>
-            <a href="{{ route('admin.monitoring') }}" class="nav-link {{ request()->routeIs('admin.monitoring*') ? 'is-active' : '' }}">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/>
-                    <path d="M22 12A10 10 0 0 0 12 2v10z"/>
-                </svg>
-                <span>Monitoring</span>
-            </a>
-            <a href="#" class="nav-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                    <circle cx="12" cy="12" r="3"/>
-                    <path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.9 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.9H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1Z"/>
-                </svg>
-                <span>Pengaturan</span>
-            </a>
-        </nav>
+            <!-- WIDGET ROLE SWITCHER (SIMULASI GANTI ROLE) -->
+            <div class="role-switcher-box">
+                <label class="role-switcher-label">Simulasi Role:</label>
+                <form action="{{ route('switch.role') }}" method="POST">
+                    @csrf
+                    <select name="role" onchange="this.form.submit()" class="role-switcher-select">
+                        <option value="admin" {{ $userRole === 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="kecamatan" {{ $userRole === 'kecamatan' ? 'selected' : '' }}>Kecamatan</option>
+                        <option value="pimpinan_kesra" {{ $userRole === 'pimpinan_kesra' ? 'selected' : '' }}>Pimpinan Kesra</option>
+                        <option value="kelurahan" {{ $userRole === 'kelurahan' ? 'selected' : '' }}>Kelurahan</option>
+                        <option value="walikota" {{ $userRole === 'walikota' ? 'selected' : '' }}>Walikota</option>
+                    </select>
+                </form>
+            </div>
+
+            @php
+                $semuaRoleNonPenempatan = ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan'];
+
+                $menus = [
+                    [
+                        'title' => 'Dashboard',
+                        'route' => 'admin.dashboard',
+                        'active' => request()->routeIs('admin.dashboard'),
+                        'roles' => ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan', 'walikota'],
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>'
+                    ],
+                    [
+                        'title' => 'Data Masyarakat',
+                        'route' => 'admin.masyarakat',
+                        'active' => request()->routeIs('admin.masyarakat*'),
+                        'roles' => $semuaRoleNonPenempatan,
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 12v4c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-4"/></svg>'
+                    ],
+                    [
+                        'title' => 'Pemberdayaan',
+                        'route' => 'admin.pemberdayaan',
+                        'active' => request()->routeIs('admin.pemberdayaan*'),
+                        'roles' => $semuaRoleNonPenempatan,
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.2"/><path d="M3 19c0-3 2.7-5 6-5s6 2 6 5"/><path d="M17 14c2.3 0 4 1.6 4 4"/></svg>'
+                    ],
+                    [
+                        'title' => 'Rekomendasi Program',
+                        'route' => 'admin.rekomendasi.index',
+                        'active' => request()->routeIs('admin.rekomendasi*'),
+                        'roles' => $semuaRoleNonPenempatan,
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
+                    ],
+                    [
+                        'title' => 'Penempatan',
+                        'route' => 'penempatan.index',
+                        'active' => request()->routeIs('penempatan.*'),
+                        'roles' => ['admin', 'walikota'],
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2.5"/><path d="M8 16v-5M12 16v-8M16 16v-3"/></svg>'
+                    ],
+                    [
+                        'title' => 'Monitoring',
+                        'route' => 'admin.monitoring',
+                        'active' => request()->routeIs('admin.monitoring*'),
+                        'roles' => ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan', 'walikota'],
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>'
+                    ],
+                    [
+                        'title' => 'Pengaturan',
+                        'route' => 'admin.dashboard',
+                        'active' => false,
+                        'roles' => ['admin'],
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 7.9 19.4l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.9H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 7.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 2.7-1.1V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0 1.1 2.7H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1Z"/></svg>'
+                    ],
+                ];
+            @endphp
+
+            <!-- NAVIGASI MENU DINAMIS -->
+            <nav class="sidebar-nav">
+                @foreach ($menus as $menu)
+                    @if (in_array($userRole, $menu['roles']))
+                        <a href="{{ $menu['route'] !== '#' ? route($menu['route']) : '#' }}" class="nav-link {{ $menu['active'] ? 'is-active' : '' }}">
+                            {!! $menu['icon'] !!}
+                            <span>{{ $menu['title'] }}</span>
+                        </a>
+                    @endif
+                @endforeach
+            </nav>
+        </div>
 
         <div class="sidebar-footer">
             <a href="#" class="btn-bantuan">Bantuan Teknis</a>

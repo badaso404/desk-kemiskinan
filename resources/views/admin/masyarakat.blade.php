@@ -29,9 +29,13 @@
     .alert-success { background: #dcfce7; border: 1px solid #86efac; color: #166534; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
     .alert-error { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; }
     .card-footer { padding: 1rem 1.25rem; border-top: 1px solid #e2e8f0; }
-    .tag-item { background: #f1f5f9; color: #334155; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; display: inline-block; margin: 2px 0; }
     .btn-icon { background: transparent; border: none; padding: 6px; cursor: pointer; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; }
     .btn-icon:hover { background: #ebf3fa; }
+
+    /* BADGE STATUS VERIFIKASI */
+    .badge-status { display: inline-flex; align-items: center; gap: 0.35rem; padding: 4px 10px; border-radius: 9999px; font-size: 0.78rem; font-weight: 600; }
+    .badge-verified { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+    .badge-pending { background: #fef9c3; color: #a16207; border: 1px solid #fde047; }
 
     /* STAT GRID RESPONSIVE */
     .stat-grid {
@@ -70,7 +74,7 @@
 <div class="page-head page-head-flex">
     <div>
         <h1>Data Masyarakat</h1>
-        <p>Kelola data warga pencari kerja, status pekerjaan, keahlian, dan wilayah.</p>
+        <p>Kelola data warga pencari kerja, status pekerjaan, status verifikasi, dan wilayah.</p>
     </div>
     <div>
         <a href="{{ route('admin.masyarakat.create') }}" class="btn-primary">
@@ -87,11 +91,24 @@
     <div class="alert-error">{{ session('error') }}</div>
 @endif
 
+<!-- CARD STATISTIK DIUBAH SANGAT PRESISI -->
 <section class="stat-grid">
-    <div class="stat-box"><div class="stat-box-head"><span>Total Masyarakat</span></div><strong>{{ number_format($ringkasan['total_masyarakat'] ?? 0) }}</strong></div>
-    <div class="stat-box"><div class="stat-box-head"><span>Membutuhkan Pekerjaan</span></div><strong>{{ number_format($ringkasan['butuh_pekerjaan'] ?? 0) }}</strong></div>
-    <div class="stat-box"><div class="stat-box-head"><span>Sudah Bekerja</span></div><strong>{{ number_format($ringkasan['sudah_bekerja'] ?? 0) }}</strong></div>
-    <div class="stat-box"><div class="stat-box-head"><span>Minat Pelatihan</span></div><strong>{{ number_format($ringkasan['dalam_pelatihan'] ?? 0) }}</strong></div>
+    <div class="stat-box">
+        <div class="stat-box-head"><span>Total Masyarakat</span></div>
+        <strong>{{ number_format($ringkasan['total_masyarakat'] ?? 0) }}</strong>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-head"><span>Sudah Bekerja</span></div>
+        <strong>{{ number_format($ringkasan['sudah_bekerja'] ?? 0) }}</strong>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-head"><span>Belum Diverifikasi</span></div>
+        <strong>{{ number_format($ringkasan['belum_verifikasi'] ?? $ringkasan['pending_verifikasi'] ?? 0) }}</strong>
+    </div>
+    <div class="stat-box">
+        <div class="stat-box-head"><span>Terverifikasi</span></div>
+        <strong>{{ number_format($ringkasan['terverifikasi'] ?? 0) }}</strong>
+    </div>
 </section>
 
 <article class="card card-filter">
@@ -102,7 +119,7 @@
             </div>
             <div>
                 <select name="wilayah" class="form-control">
-                    <option value="">-- Semua Wilayah --</option>
+                    <option value="">Semua Wilayah</option>
                     @foreach ($wilayahList as $wil)
                         <option value="{{ $wil }}" {{ request('wilayah') == $wil ? 'selected' : '' }}>{{ $wil }}</option>
                     @endforeach
@@ -110,7 +127,7 @@
             </div>
             <div>
                 <select name="status" class="form-control">
-                    <option value="">-- Semua Status --</option>
+                    <option value="">Semua Status</option>
                     <option value="Belum / Tidak Bekerja" {{ request('status') == 'Belum / Tidak Bekerja' ? 'selected' : '' }}>Belum / Tidak Bekerja</option>
                     <option value="Pekerja Lepas / Serabutan" {{ request('status') == 'Pekerja Lepas / Serabutan' ? 'selected' : '' }}>Pekerja Lepas / Serabutan</option>
                     <option value="Terkena PHK" {{ request('status') == 'Terkena PHK' ? 'selected' : '' }}>Terkena PHK</option>
@@ -136,7 +153,7 @@
                     <th>Nama & NIK</th>
                     <th>Kontak</th>
                     <th>Wilayah</th>
-                    <th>Keahlian</th>
+                    <th>Status Verifikasi</th> <!-- DIUBAH DARI KEAHLIAN -->
                     <th>Status Pekerjaan</th>
                     <th class="text-center" width="70">Aksi</th>
                 </tr>
@@ -151,11 +168,16 @@
                         </td>
                         <td>{{ $warga->telepon }}</td>
                         <td>{{ $warga->kecamatan }}</td>
+                        
+                        <!-- KOLOM STATUS VERIFIKASI -->
                         <td>
-                            @foreach (explode(',', $warga->keahlian) as $skill)
-                                <span class="tag-item">{{ trim($skill) }}</span>
-                            @endforeach
+                            @if(($warga->status_verifikasi ?? '') === 'Terverifikasi')
+                                <span class="badge-status badge-verified">Sudah Terverifikasi</span>
+                            @else
+                                <span class="badge-status badge-pending">Belum Terverifikasi</span>
+                            @endif
                         </td>
+                        
                         <td><span class="badge">{{ $warga->status_pekerjaan }}</span></td>
                         <td>
                             <div style="display: flex; gap: 6px; justify-content: center;">
