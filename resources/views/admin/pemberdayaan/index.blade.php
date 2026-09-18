@@ -39,8 +39,8 @@
                     <input type="hidden" name="tab" value="mitra">
                     <select name="jenis" onchange="this.form.submit()" style="padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;">
                         <option value="">Semua Jenis</option>
-                        <option value="UKPD" {{ request('jenis') === 'UKPD' ? 'selected' : '' }}>Hanya UKPD</option>
-                        <option value="CSR" {{ request('jenis') === 'CSR' ? 'selected' : '' }}>Hanya CSR</option>
+                        <option value="UKPD" {{ request('jenis') === 'UKPD' ? 'selected' : '' }}>UKPD</option>
+                        <option value="CSR" {{ request('jenis') === 'CSR' ? 'selected' : '' }}>CSR</option>
                     </select>
                 </form>
 

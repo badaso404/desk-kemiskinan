@@ -4,28 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Masyarakat;
 use App\Models\Penempatan;
+use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MonitoringController extends Controller
 {
-    public function index()
+    private function getLaporanData()
     {
-        // 1. TOTAL MASYARAKAT
+        // 1. Total Masyarakat
         $totalMasyarakat = Masyarakat::count();
 
-        // 2. MASYARAKAT YANG SUDAH DITEMPATKAN
-        // Mengambil jumlah warga unik dari tabel penempatans dengan status 'Bekerja' atau 'Diterima'
+        // 2. Masyarakat yang Sudah Ditempatkan (Status 'Bekerja' atau 'Diterima')
         $masyarakatDitempatkan = Penempatan::whereIn('status', ['Bekerja', 'Diterima'])
             ->distinct('masyarakat_id')
             ->count('masyarakat_id');
 
-        // 3. RUMUS TINGKAT PENEMPATAN: (Masyarakat Sudah Ditempatkan / Total Masyarakat) * 100%
+        // 3. Tingkat Penempatan (%)
         $tingkatPenempatan = $totalMasyarakat > 0 
             ? round(($masyarakatDitempatkan / $totalMasyarakat) * 100, 1) 
             : 0;
 
-        // Stat tambahan
+        // 4. Masyarakat Butuh Pekerjaan
         $butuhPekerjaan = Masyarakat::whereIn('status_pekerjaan', [
             'Belum / Tidak Bekerja', 
             'Terkena PHK', 
@@ -34,7 +35,7 @@ class MonitoringController extends Controller
         
         $totalPenempatan = Penempatan::count();
 
-        // 4. DISTRIBUSI STATUS PEKERJAAN (DINAMIS)
+        // 5. Distribusi Status Pekerjaan
         $distribusiPekerjaan = Masyarakat::select('status_pekerjaan', DB::raw('count(*) as total'))
             ->whereNotNull('status_pekerjaan')
             ->groupBy('status_pekerjaan')
@@ -42,7 +43,7 @@ class MonitoringController extends Controller
 
         $maxCount = $distribusiPekerjaan->max('total') ?? 1;
 
-        // 5. REKAPITULASI KECAMATAN (DINAMIS)
+        // 6. Rekapitulasi per Kecamatan
         $rekapKecamatan = Masyarakat::select(
                 'kecamatan',
                 DB::raw('count(*) as total_warga'),
@@ -53,13 +54,20 @@ class MonitoringController extends Controller
             ->orderBy('total_warga', 'desc')
             ->get();
 
-        // 6. PENEMPATAN TERBARU
-
+        // 7. Riwayat Penempatan Terbaru
         $penempatanTerbaru = Penempatan::with(['masyarakat', 'program'])
             ->latest('updated_at')
             ->get();
 
-        return view('admin.monitoring.monitoring', compact(
+        $rekapProgram = Program::with('mitra')->get();
+
+        $rekapProgram->transform(function ($program) {
+            $program->total_masuk = Penempatan::where('program_id', $program->id)->count();
+            return $program;
+        });
+
+
+        return compact(
             'totalMasyarakat',
             'masyarakatDitempatkan',
             'butuhPekerjaan',
@@ -68,7 +76,22 @@ class MonitoringController extends Controller
             'distribusiPekerjaan',
             'maxCount',
             'rekapKecamatan',
-            'penempatanTerbaru'
-        ));
+            'penempatanTerbaru',
+            'rekapProgram' // Variable rekap program UKPD/CSR
+        );
+    }
+
+    public function index()
+    {
+        $data = $this->getLaporanData();
+        return view('admin.monitoring.monitoring', $data);
+    }
+
+    public function downloadPdf()
+    {
+        $data = $this->getLaporanData();
+        $pdf = Pdf::loadView('admin.monitoring.pdf', $data)->setPaper('a4', 'portrait');
+        
+        return $pdf->download('Laporan_Monitoring_Pemberdayaan_'.date('Y-m-d').'.pdf');
     }
 }
