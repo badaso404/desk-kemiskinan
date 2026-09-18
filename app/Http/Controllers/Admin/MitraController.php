@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditTrail;
 use App\Models\Mitra;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,16 @@ class MitraController extends Controller
 
     public function store(Request $request)
     {
-        Mitra::create($this->validasi($request));
+        $mitra = Mitra::create($this->validasi($request));
+
+        AuditTrail::log(
+            'create',
+            'mitra',
+            'Penyelenggara mitra "' . $mitra->nama . '" berhasil ditambahkan.',
+            Mitra::class,
+            $mitra->id,
+            ['jenis' => $mitra->jenis]
+        );
 
         return redirect()
             ->route('admin.pemberdayaan')
@@ -38,6 +48,15 @@ class MitraController extends Controller
     {
         $mitra->update($this->validasi($request));
 
+        AuditTrail::log(
+            'update',
+            'mitra',
+            'Data mitra "' . $mitra->nama . '" berhasil diperbarui.',
+            Mitra::class,
+            $mitra->id,
+            ['jenis' => $mitra->jenis]
+        );
+
         return redirect()
             ->route('admin.mitra.show', $mitra)
             ->with('sukses', 'Data penyelenggara berhasil diperbarui.');
@@ -45,7 +64,17 @@ class MitraController extends Controller
 
     public function destroy(Mitra $mitra)
     {
+        $nama = $mitra->nama;
         $mitra->delete();
+
+        AuditTrail::log(
+            'delete',
+            'mitra',
+            'Penyelenggara mitra "' . $nama . '" berhasil dihapus.',
+            Mitra::class,
+            $mitra->id,
+            ['status' => 'deleted']
+        );
 
         return redirect()
             ->route('admin.pemberdayaan')

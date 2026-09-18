@@ -264,6 +264,12 @@
                 </svg>
                 <span>Monitoring</span>
             </a>
+            <a href="{{ route('admin.audit-trail') }}" class="nav-link {{ request()->routeIs('admin.audit-trail') ? 'is-active' : '' }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M4 12h6l3-7 3 14 2-7h3"/>
+                </svg>
+                <span>Audit Trail</span>
+            </a>
             <a href="#" class="nav-link">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <circle cx="12" cy="12" r="3"/>

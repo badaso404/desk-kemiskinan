@@ -9,7 +9,7 @@
 
     <!-- Notifikasi Pesan Sukses -->
     @if(session('success'))
-        <div class="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl flex items-center gap-3">
+        <div class="mb-6 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl flex items-center gap-3">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             <span class="text-[14px] font-medium">{{ session('success') }}</span>
         </div>
@@ -62,14 +62,14 @@
 
     <!-- Data Table Container -->
     <div class="bg-white rounded-[1rem] shadow-sm border border-gray-100 overflow-hidden mt-6">
-        
+
         <!-- Toolbar (Pencarian & Filter) -->
         <div class="p-5 flex justify-between items-center bg-white border-b border-gray-50">
             <div class="relative w-[340px]">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                     <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </div>
-                <input type="text" placeholder="Cari kandidat..." class="w-full pl-10 pr-4 py-2 border border-gray-100 rounded-full text-[14px] text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#086b50] bg-[#F8FAFC]">
+                <input type="text" placeholder="Cari kandidat..." class="w-full pl-10 pr-4 py-2 border border-gray-100 rounded-full text-[14px] text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#12395B] bg-[#F8FAFC]">
             </div>
             <div class="flex gap-3">
                 <div class="relative">
@@ -106,7 +106,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 text-[14px] text-[#475569]">
-                    
+
                     @forelse($kandidat ?? [] as $item)
                         <tr class="hover:bg-gray-50 transition duration-150">
                             <!-- Kolom Nama & NIK -->
@@ -114,18 +114,18 @@
                                 <p class="font-semibold text-gray-900 text-[15px]">{{ $item->nama }}</p>
                                 <p class="text-gray-400 text-[13px] mt-0.5">{{ $item->nik }}</p>
                             </td>
-                            
+
                             <!-- Kolom Posisi -->
                             <td class="px-6 py-4">{{ $item->posisi }}</td>
-                            
+
                             <!-- Kolom Pemberi Kerja -->
                             <td class="px-6 py-4">{{ $item->pemberi_kerja }}</td>
-                            
+
                             <!-- Kolom Tanggal Penempatan -->
                             <td class="px-6 py-4">
                                 {{ $item->tanggal_penempatan ? \Carbon\Carbon::parse($item->tanggal_penempatan)->translatedFormat('d M Y') : '-' }}
                             </td>
-                            
+
                             <!-- Kolom Status (Badge) -->
                             <td class="px-6 py-4 text-center">
                                 @php
@@ -140,13 +140,13 @@
                                     {{ $item->status }}
                                 </span>
                             </td>
-                            
+
                            <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-3">
-                                <a href="{{ route('penempatan.edit', $item->id) }}" class="text-gray-400 hover:text-[#086b50] transition" title="Edit Data">
+                                <a href="{{ route('penempatan.edit', $item->id) }}" class="text-gray-400 hover:text-[#12395B] transition" title="Edit Data">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </a>
-                                <a href="{{ route('penempatan.show', $item->id) }}" class="text-gray-400 hover:text-[#086b50] transition" title="Lihat Detail">
+                                <a href="{{ route('penempatan.show', $item->id) }}" class="text-gray-400 hover:text-[#12395B] transition" title="Lihat Detail">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 </a>
                             </div>
@@ -173,21 +173,21 @@
         <!-- Pagination (Footer Tabel) -->
         <div class="p-5 border-t border-gray-100 flex justify-between items-center text-[14px] text-[#475569] bg-white">
             <div>
-                Menampilkan 
-                @if(isset($kandidat) && $kandidat->count() > 0) 1–{{ $kandidat->count() }} @else 0 @endif 
+                Menampilkan
+                @if(isset($kandidat) && $kandidat->count() > 0) 1–{{ $kandidat->count() }} @else 0 @endif
                 dari {{ $stats['total'] ?? 0 }} data
             </div>
-            
+
             <div class="flex items-center gap-2">
                 <button class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:bg-gray-50 transition cursor-pointer">&lt;</button>
-                <button class="w-8 h-8 flex items-center justify-center rounded-full bg-[#1D4ED8] text-white font-semibold shadow-sm">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded-full bg-[#12395B] text-white font-semibold shadow-sm">1</button>
                 <button class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 transition cursor-pointer">2</button>
                 <button class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 transition cursor-pointer">3</button>
                 <span class="px-1 text-gray-400">...</span>
                 <button class="w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:bg-gray-50 transition cursor-pointer">&gt;</button>
             </div>
         </div>
-        
+
     </div>
 
 @endsection

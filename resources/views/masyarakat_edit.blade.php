@@ -13,13 +13,13 @@
     .form-group-full { grid-column: span 2; }
     .form-label { display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
     .form-input, .form-select, .form-textarea { width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1.5px solid #e2e8f0; background-color: #f8fafc; color: #1e293b; font-size: 0.95rem; outline: none; box-sizing: border-box; transition: all 0.2s ease; }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #047857; background-color: #fff; box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.1); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #12395B; background-color: #fff; box-shadow: 0 0 0 4px rgba(18, 57, 91, 0.1); }
     .radio-flex { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; margin-top: 0.5rem; }
     .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem; }
     .custom-option { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.925rem; color: #334155; }
-    .custom-option input { width: 18px; height: 18px; accent-color: #047857; }
-    .btn-submit { background-color: #047857; color: #fff; padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
-    .btn-submit:hover { background-color: #065f46; }
+    .custom-option input { width: 18px; height: 18px; accent-color: #12395B; }
+    .btn-submit { background: linear-gradient(135deg, #12395B, #1a5ca8); color: #fff; padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; box-shadow: 0 6px 18px rgba(18, 57, 91, 0.18); }
+    .btn-submit:hover { background: linear-gradient(135deg, #0f2c4d, #12395B); }
     .btn-cancel { background-color: #f1f5f9; color: #475569; padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; text-decoration: none; display: inline-block; transition: background 0.2s; }
     .btn-cancel:hover { background-color: #e2e8f0; }
 

@@ -6,12 +6,15 @@
 }
 
 :root {
-    --hijau: #1c5c3f;
-    --hijau-terang: #2f7d57;
-    --krem: #faf7f2;
-    --garis: #e5e7eb;
+    --hijau: #12395B;
+    --hijau-terang: #1f5d99;
+    --biru: #12395B;
+    --biru-terang: #1d4ed8;
+    --biru-muda: #ebf3ff;
+    --krem: #f8fafc;
+    --garis: #dfe7f1;
     --teks: #111827;
-    --teks-samar: #6b7280;
+    --teks-samar: #64748b;
 }
 
 .admin-body {
@@ -272,10 +275,14 @@
 }
 
 .card-link {
-    color: var(--teks);
+    color: var(--biru);
     text-decoration: none;
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
+}
+
+.card-link:hover {
+    color: var(--biru-terang);
 }
 
 .grid-two {
@@ -661,11 +668,12 @@
     height: 38px;
     flex-shrink: 0;
     border-radius: 50%;
-    background: var(--hijau-terang);
+    background: linear-gradient(135deg, var(--biru), #1c5d9c);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 6px 18px rgba(18, 57, 91, 0.18);
 }
 
 .reco-go svg {
@@ -895,12 +903,13 @@
 }
 
 .btn-primary {
-    background: var(--hijau);
+    background: linear-gradient(135deg, var(--biru), #1a5ca8);
     color: #fff;
+    box-shadow: 0 6px 18px rgba(18, 57, 91, 0.18);
 }
 
 .btn-primary:hover {
-    background: #14452f;
+    background: linear-gradient(135deg, #0f2c4d, var(--biru));
 }
 
 .btn-ghost {
@@ -923,9 +932,9 @@
     background: none;
     border: 0;
     padding: 0;
-    color: var(--hijau-terang);
+    color: var(--biru);
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
     cursor: pointer;
     font-family: inherit;
@@ -933,6 +942,7 @@
 
 .btn-link:hover {
     text-decoration: underline;
+    color: var(--biru-terang);
 }
 
 .btn-link.is-danger {
@@ -1102,8 +1112,8 @@
 }
 
 .tag {
-    background: var(--hijau-muda, #d6ece0);
-    color: #14452f;
+    background: var(--hijau-muda, #eaf3ff);
+    color: #12395B;
     padding: 3px 10px;
     border-radius: 6px;
     font-size: 12px;
@@ -1228,6 +1238,4 @@
     }
 }
 
-:root {
-    --hijau-muda: #d6ece0;
-}
+

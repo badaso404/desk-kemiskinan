@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditTrail;
 use App\Models\Penempatan;
 use App\Models\Masyarakat;
 use App\Models\Program;
@@ -51,9 +52,9 @@ class PenempatanController extends Controller
         $daftarProgram = Program::with('mitra')->orderBy('nama')->get();
 
         return view('admin.penempatan.create', compact(
-            'daftarMasyarakat', 
-            'daftarProgram', 
-            'masyarakat_id', 
+            'daftarMasyarakat',
+            'daftarProgram',
+            'masyarakat_id',
             'program_id'
         ));
     }
@@ -77,7 +78,16 @@ public function store(Request $request)
         }
 
         // Simpan langsung ke database
-        Penempatan::create($validated);
+        $penempatan = Penempatan::create($validated);
+
+        AuditTrail::log(
+            'create',
+            'penempatan',
+            'Kandidat "' . $penempatan->masyarakat->nama . '" ditempatkan ke program "' . $penempatan->program->nama . '".',
+            Penempatan::class,
+            $penempatan->id,
+            ['status' => $penempatan->status]
+        );
 
         // Langsung arahkan ke halaman daftar penempatan (index)
         return redirect()->route('penempatan.index')
@@ -89,7 +99,7 @@ public function store(Request $request)
     public function show($id)
     {
         $penempatan = Penempatan::with(['masyarakat', 'program.mitra'])->findOrFail($id);
-        
+
         return view('show', compact('penempatan'));
     }
 
@@ -130,6 +140,15 @@ public function store(Request $request)
         }
 
         $penempatan->update($validated);
+
+        AuditTrail::log(
+            'update',
+            'penempatan',
+            'Status penempatan untuk "' . $penempatan->masyarakat->nama . '" diubah menjadi "' . $penempatan->status . '".',
+            Penempatan::class,
+            $penempatan->id,
+            ['status' => $penempatan->status]
+        );
 
         return redirect()->route('penempatan.index')->with('success', 'Data penempatan berhasil diperbarui.');
     }

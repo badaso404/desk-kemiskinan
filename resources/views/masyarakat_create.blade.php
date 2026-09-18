@@ -12,9 +12,9 @@
     .step-item { display: flex; flex-direction: column; align-items: center; flex: 1; text-align: center; }
     .step-number { width: 48px; height: 48px; border-radius: 50%; background-color: #e2e8f0; color: #64748b; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem; transition: all 0.3s ease; }
     .step-label { font-size: 0.875rem; font-weight: 600; color: #94a3b8; }
-    .step-item.active .step-number { background-color: #047857; color: #ffffff; box-shadow: 0 0 0 5px rgba(4, 120, 87, 0.15); }
-    .step-item.active .step-label { color: #047857; font-weight: 700; }
-    .step-item.completed .step-number { background-color: #059669; color: #ffffff; }
+    .step-item.active .step-number { background-color: #12395B; color: #ffffff; box-shadow: 0 0 0 5px rgba(18, 57, 91, 0.15); }
+    .step-item.active .step-label { color: #12395B; font-weight: 700; }
+    .step-item.completed .step-number { background-color: #1f5d9c; color: #ffffff; }
     .form-step { display: none; animation: fadeIn 0.3s ease-in-out; }
     .form-step-active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -23,16 +23,16 @@
     .form-group-full { grid-column: span 2; }
     .form-label { display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
     .form-input, .form-select, .form-textarea { width: 100%; padding: 0.85rem 1.1rem; border-radius: 12px; border: 1.5px solid #e2e8f0; background-color: #f8fafc; color: #1e293b; font-size: 0.95rem; outline: none; box-sizing: border-box; transition: all 0.2s ease; }
-    .form-input:focus, .form-select:focus, .form-textarea:focus { background-color: #ffffff; border-color: #047857; box-shadow: 0 0 0 4px rgba(4, 120, 87, 0.1); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { background-color: #ffffff; border-color: #12395B; box-shadow: 0 0 0 4px rgba(18, 57, 91, 0.1); }
     .is-invalid { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
     .radio-flex { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: center; margin-top: 0.5rem; }
     .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.5rem; }
     .custom-option { display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.925rem; color: #334155; }
-    .custom-option input { width: 18px; height: 18px; accent-color: #047857; }
+    .custom-option input { width: 18px; height: 18px; accent-color: #12395B; }
     .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #f1f5f9; }
     .btn-step { padding: 0.85rem 2rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.2s ease; }
     .btn-prev { background-color: #f1f5f9; color: #64748b; }
-    .btn-next { background-color: #047857; color: #ffffff; }
+    .btn-next { background-color: #12395B; color: #ffffff; }
     .btn-disabled { opacity: 0.5; cursor: not-allowed; }
     @media (max-width: 868px) { .form-grid { grid-template-columns: 1fr; } .form-group-full { grid-column: span 1; } }
 </style>
