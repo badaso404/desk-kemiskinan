@@ -110,6 +110,7 @@ Route::post('/switch-role', function (Request $request) {
         'role' => 'required|in:admin,kecamatan,pimpinan_kesra,kelurahan,walikota',
     ]);
 
+    /** @var \App\Models\User|null $user */
     $user = auth()->user();
     if ($user) {
         $user->role = $request->role;
