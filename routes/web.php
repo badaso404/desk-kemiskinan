@@ -101,21 +101,3 @@ Route::middleware('auth')->group(function () {
     Route::put('/penempatan/{id}', [PenempatanController::class, 'update'])->name('penempatan.update');
     Route::get('/penempatan/{id}', [PenempatanController::class, 'show'])->name('penempatan.show');
 });
-
-use Illuminate\Http\Request;
-
-// Route Cepat untuk Mengubah Role User Login
-Route::post('/switch-role', function (Request $request) {
-    $request->validate([
-        'role' => 'required|in:admin,kecamatan,pimpinan_kesra,kelurahan,walikota',
-    ]);
-
-    /** @var \App\Models\User|null $user */
-    $user = auth()->user();
-    if ($user) {
-        $user->role = $request->role;
-        $user->save();
-    }
-
-    return back();
-})->name('switch.role')->middleware('auth');

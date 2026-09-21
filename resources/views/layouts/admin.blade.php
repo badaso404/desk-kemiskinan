@@ -66,39 +66,6 @@
             color: #94a3b8;
         }
 
-        /* WIDGET ROLE SWITCHER */
-        .role-switcher-box {
-            padding: 0.6rem 0.75rem;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            margin: 0.85rem 0;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-        }
-
-        .role-switcher-label {
-            display: block;
-            font-size: 0.68rem;
-            color: #94a3b8;
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 0.35rem;
-            letter-spacing: 0.5px;
-        }
-
-        .role-switcher-select {
-            width: 100%;
-            padding: 0.45rem 0.6rem;
-            border-radius: 6px;
-            background: #0b2238;
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 0.825rem;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-            font-family: inherit;
-        }
-
         /* KONSISTENSI MENU NAVIGASI */
         .sidebar-nav {
             display: flex;
@@ -308,21 +275,6 @@
                     <strong>{{ $currentBrandTitle }}</strong>
                     <span>Kota Jakarta Barat</span>
                 </div>
-            </div>
-
-            <!-- WIDGET ROLE SWITCHER (SIMULASI GANTI ROLE) -->
-            <div class="role-switcher-box">
-                <label class="role-switcher-label">Simulasi Role:</label>
-                <form action="{{ route('switch.role') }}" method="POST">
-                    @csrf
-                    <select name="role" onchange="this.form.submit()" class="role-switcher-select">
-                        <option value="admin" {{ $userRole === 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="kecamatan" {{ $userRole === 'kecamatan' ? 'selected' : '' }}>Kecamatan</option>
-                        <option value="pimpinan_kesra" {{ $userRole === 'pimpinan_kesra' ? 'selected' : '' }}>Pimpinan Kesra</option>
-                        <option value="kelurahan" {{ $userRole === 'kelurahan' ? 'selected' : '' }}>Kelurahan</option>
-                        <option value="walikota" {{ $userRole === 'walikota' ? 'selected' : '' }}>Walikota</option>
-                    </select>
-                </form>
             </div>
 
             @php
