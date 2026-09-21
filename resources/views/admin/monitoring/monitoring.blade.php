@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Monitoring & Pemantauan Data')
+@section('title', 'Monitoring & Laporan Pemberdayaan')
 
 @section('content')
 <style>
@@ -21,8 +21,16 @@
     .monitoring-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
         gap: 1rem;
         margin-bottom: 1.75rem;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
     }
 
     .header-icon-box {
@@ -49,6 +57,28 @@
         font-size: 0.875rem;
         color: var(--text-muted);
         margin: 0;
+    }
+
+    .btn-download-pdf {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background-color: #dc2626;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 0.875rem;
+        padding: 0.625rem 1.25rem;
+        border-radius: 10px;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
+        transition: all 0.2s ease;
+    }
+
+    .btn-download-pdf:hover {
+        background-color: #b91c1c;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+        transform: translateY(-1px);
     }
 
     /* TOP STATS GRID */
@@ -100,6 +130,7 @@
         border: 1px solid #e2e8f0;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
         padding: 1.5rem;
+        margin-bottom: 1.75rem;
     }
 
     .panel-head {
@@ -128,9 +159,9 @@
 
     .status-row {
         display: grid;
-        grid-template-columns: 180px 1fr 40px;
+        grid-template-columns: 160px 1fr 40px 50px;
         align-items: center;
-        gap: 1rem;
+        gap: 0.75rem;
     }
 
     .status-badge-pill {
@@ -169,6 +200,13 @@
         text-align: right;
     }
 
+    .status-pct {
+        font-size: 0.775rem;
+        font-weight: 600;
+        color: #64748b;
+        text-align: right;
+    }
+
     /* REKAP KECAMATAN LIST */
     .kecamatan-list {
         display: flex;
@@ -201,7 +239,7 @@
     .kecamatan-stats {
         display: flex;
         align-items: center;
-        gap: 1.25rem;
+        gap: 1rem;
         font-size: 0.875rem;
     }
 
@@ -216,6 +254,15 @@
         font-weight: 700;
         min-width: 20px;
         text-align: right;
+    }
+
+    .stat-pct-badge {
+        font-size: 0.75rem;
+        font-weight: 700;
+        background: #f1f5f9;
+        color: #475569;
+        padding: 2px 8px;
+        border-radius: 6px;
     }
 
     /* RECENT UPDATES */
@@ -255,9 +302,6 @@
         border-radius: 9999px;
         font-size: 0.75rem;
         font-weight: 600;
-        background: #f0fdf4;
-        color: #15803d;
-        border: 1px solid #bbf7d0;
     }
 
     @media (max-width: 1024px) {
@@ -267,23 +311,32 @@
 
     @media (max-width: 640px) {
         .stat-grid-4 { grid-template-columns: 1fr; }
-        .status-row { grid-template-columns: 130px 1fr 30px; }
+        .status-row { grid-template-columns: 110px 1fr 30px 40px; }
     }
 </style>
 
 <div class="monitoring-wrapper">
 
-    <!-- HEADER -->
+    <!-- HEADER + TOMBOL DOWNLOAD PDF -->
     <div class="monitoring-header">
-        <div class="header-icon-box">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        <div class="header-left">
+            <div class="header-icon-box">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>Monitoring &amp; Laporan Program</h1>
+                <p>Pemantauan status masyarakat, rekap data wilayah, dan ekspor laporan</p>
+            </div>
+        </div>
+
+        <a href="{{ route('admin.monitoring.download-pdf') }}" class="btn-download-pdf" target="_blank">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
             </svg>
-        </div>
-        <div class="header-text">
-            <h1>Monitoring Program</h1>
-            <p>Pemantauan status masyarakat dan penempatan program secara real-time</p>
-        </div>
+            <span>Download PDF Full</span>
+        </a>
     </div>
 
     <!-- 4 RINGKASAN CARDS DINAMIS -->
@@ -315,18 +368,21 @@
     <!-- MAIN GRID DINAMIS -->
     <div class="monitoring-main-grid">
 
-        <!-- KIRI: DISTRIBUSI STATUS PEKERJAAN -->
-        <article class="card-panel">
+        <!-- KIRI: DISTRIBUSI STATUS PEKERJAAN (ADA PERSENTASE) -->
+        <article class="card-panel" style="margin-bottom: 0;">
             <div class="panel-head">
                 <h2>Distribusi Status Pekerjaan</h2>
-                <p>Jumlah warga berdasarkan kategori status pekerjaan saat ini</p>
+                <p>Jumlah &amp; persentase warga berdasarkan kategori pekerjaan</p>
             </div>
 
             <div class="status-list">
                 @forelse ($distribusiPekerjaan as $row)
                     @php 
-                        $pct = round(($row->total / $maxCount) * 100);
-                        if ($row->total > 0 && $pct < 6) $pct = 6;
+                        $pctFill = round(($row->total / $maxCount) * 100);
+                        if ($row->total > 0 && $pctFill < 6) $pctFill = 6;
+
+                        // Persentase Asli
+                        $pctReal = $totalMasyarakat > 0 ? round(($row->total / $totalMasyarakat) * 100, 1) : 0;
                     @endphp
                     <div class="status-row">
                         <div>
@@ -335,9 +391,10 @@
                             </span>
                         </div>
                         <div class="progress-track">
-                            <div class="progress-fill" style="width: {{ $pct }}%;"></div>
+                            <div class="progress-fill" style="width: {{ $pctFill }}%;"></div>
                         </div>
                         <div class="status-count">{{ $row->total }}</div>
+                        <div class="status-pct">{{ $pctReal }}%</div>
                     </div>
                 @empty
                     <p style="text-align: center; color: #94a3b8; padding: 1.5rem 0;">Belum ada data status pekerjaan.</p>
@@ -345,15 +402,18 @@
             </div>
         </article>
 
-        <!-- KANAN: REKAPITULASI KECAMATAN -->
-        <article class="card-panel">
+        <!-- KANAN: REKAPITULASI KECAMATAN (ADA PERSENTASE) -->
+        <article class="card-panel" style="margin-bottom: 0;">
             <div class="panel-head">
                 <h2>Kasus per Kecamatan</h2>
-                <p>Total warga & warga yang membutuhkan pekerjaan per wilayah</p>
+                <p>Total warga &amp; persentase warga yang butuh kerja per wilayah</p>
             </div>
 
             <div class="kecamatan-list">
                 @forelse ($rekapKecamatan as $kec)
+                    @php
+                        $rasioKec = $kec->total_warga > 0 ? round(($kec->butuh_kerja / $kec->total_warga) * 100, 1) : 0;
+                    @endphp
                     <div class="kecamatan-item">
                         <div class="kecamatan-info">
                             <svg width="16" height="16" fill="none" stroke="#12395B" stroke-width="2" viewBox="0 0 24 24">
@@ -364,7 +424,8 @@
                         </div>
                         <div class="kecamatan-stats">
                             <span class="stat-aktif-text">{{ $kec->butuh_kerja }} butuh kerja</span>
-                            <span class="stat-total-text">{{ $kec->total_warga }}</span>
+                            <span class="stat-total-text">{{ $kec->total_warga }} total</span>
+                            <span class="stat-pct-badge">{{ $rasioKec }}%</span>
                         </div>
                     </div>
                 @empty
@@ -372,8 +433,68 @@
                 @endforelse
             </div>
         </article>
+        <!-- REKAPITULASI KUOTA PROGRAM PEMBERDAYAAN (UKPD & CSR) -->
+        <article class="card-panel">
+            <div class="panel-head">
+                <h2>Rekapitulasi Kuota &amp; Serapan Program (UKPD / CSR)</h2>
+                <p>Monitoring kapasitas kuota, jumlah warga yang masuk, dan sisa kuota per program</p>
+            </div>
 
-    </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+                    <thead>
+                        <tr style="background: #f8fafc; color: #475569; text-transform: uppercase; font-size: 0.75rem; border-bottom: 2px solid #e2e8f0;">
+                            <th style="padding: 10px; text-align: center; width: 40px;">No</th>
+                            <th style="padding: 10px; text-align: left;">Nama Program Pemberdayaan</th>
+                            <th style="padding: 10px; text-align: left;">Penyelenggara</th>
+                            <th style="padding: 10px; text-align: center;">Kategori</th>
+                            <th style="padding: 10px; text-align: center;">Kuota Total</th>
+                            <th style="padding: 10px; text-align: center;">Warga Masuk</th>
+                            <th style="padding: 10px; text-align: center;">Sisa Kuota</th>
+                            <th style="padding: 10px; text-align: center;">Persentase Serapan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($rekapProgram as $index => $prog)
+                            @php
+                                $kuota = $prog->kuota ?? $prog->kapasitas ?? 0;
+                                $masuk = $prog->total_masuk ?? 0;
+                                $sisa = max(0, $kuota - $masuk);
+                                $serapan = $kuota > 0 ? round(($masuk / $kuota) * 100, 1) : 0;
+                                $isCsr = strtoupper($prog->mitra?->kategori ?? '') === 'CSR';
+                            @endphp
+                            <tr style="border-bottom: 1px dashed #f1f5f9;">
+                                <td style="padding: 10px; text-align: center; font-weight: 700;">{{ $index + 1 }}</td>
+                                <td style="padding: 10px; font-weight: 700; color: #12395B;">{{ $prog->nama_program ?? $prog->nama }}</td>
+                                <td style="padding: 10px;">{{ $prog->mitra?->nama_mitra ?? $prog->mitra?->nama ?? '-' }}</td>
+                                <td style="padding: 10px; text-align: center;">
+                                    @if($isCsr)
+                                        <span style="background: #dbeafe; color: #1e40af; font-weight: 700; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px;">CSR</span>
+                                    @else
+                                        <span style="background: #dcfce7; color: #166534; font-weight: 700; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px;">UKPD</span>
+                                    @endif
+                                </td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700;">{{ number_format($kuota) }}</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; color: #12395B;">{{ number_format($masuk) }}</td>
+                                <td style="padding: 10px; text-align: center; font-weight: 700; color: {{ $sisa > 0 ? '#d97706' : '#dc2626' }};">
+                                    {{ number_format($sisa) }}
+                                </td>
+                                <td style="padding: 10px; text-align: center;">
+                                    <span style="font-weight: 700; color: {{ $serapan >= 100 ? '#dc2626' : '#16a34a' }};">
+                                        {{ $serapan }}%
+                                    </span>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="8" style="text-align: center; color: #94a3b8; padding: 1.5rem 0;">Belum ada data program pemberdayaan.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </article>
+            </div>
 
     <!-- PANEL BAWAH: SELURUH PEMBARUAN PENEMPATAN -->
     <article class="card-panel">
@@ -387,7 +508,7 @@
             </span>
         </div>
 
-        <!-- KONTAINER SCROLLABLE AGAR DASHBOARD TETAP RAPI -->
+        <!-- KONTAINER SCROLLABLE -->
         <div class="recent-list" style="max-height: 440px; overflow-y: auto; padding-right: 4px;">
             @forelse ($penempatanTerbaru as $p)
                 <div class="recent-item">

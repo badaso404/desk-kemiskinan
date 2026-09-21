@@ -96,7 +96,6 @@ class RekomendasiController extends Controller
                     'kriteria_cocok' => $cocok,
                 ];
             })
-            ->filter(fn ($item) => $item['kriteria_cocok'] !== [])
             ->sortByDesc('skor')
             ->values();
     }

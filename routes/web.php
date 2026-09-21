@@ -81,6 +81,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     // Route Monitoring
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
+    Route::get('/monitoring/download-pdf', [MonitoringController::class, 'downloadPdf'])->name('monitoring.download-pdf');
 });
 
 /*
