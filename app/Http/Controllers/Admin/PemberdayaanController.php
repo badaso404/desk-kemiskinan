@@ -14,26 +14,63 @@ class PemberdayaanController extends Controller
      */
     public function index(Request $request)
     {
-        // Siapkan query dasar untuk Mitra
+        $search = trim((string) $request->input('search', ''));
+        $jenis = $request->input('jenis');
+        $selectedMitraId = $request->input('mitra_id');
+
         $mitraQuery = Mitra::with('program')->orderBy('jenis')->orderBy('nama');
 
-        // Terapkan filter jika parameter 'jenis' ada dan valid
         if ($request->filled('jenis') && in_array($request->jenis, ['UKPD', 'CSR'])) {
             $mitraQuery->where('jenis', $request->jenis);
         }
 
-        // Eksekusi data setelah difilter (jika ada)
-        $mitra = $mitraQuery->get();
-        $program = Program::with('mitra')->orderByDesc('tanggal_mulai')->get();
+        if ($search !== '') {
+            $mitraQuery->where(function ($query) use ($search) {
+                $query->where('nama', 'like', "%{$search}%")
+                    ->orWhere('bidang', 'like', "%{$search}%")
+                    ->orWhere('jenis', 'like', "%{$search}%");
+            });
+        }
 
-        // Hitung ringkasan langsung dari Database agar total tidak berubah saat tabel difilter
+        $mitra = $mitraQuery->get();
+
+        $selectedMitra = null;
+        if ($selectedMitraId && $mitra->contains('id', $selectedMitraId)) {
+            $selectedMitra = $mitra->firstWhere('id', $selectedMitraId);
+        }
+
+        if (!$selectedMitra && $mitra->isNotEmpty()) {
+            $selectedMitra = $mitra->first();
+        }
+
+        $programQuery = Program::with('mitra')->orderByDesc('tanggal_mulai');
+
+        if ($selectedMitra) {
+            $programQuery->where('mitra_id', $selectedMitra->id);
+        }
+
+        if ($request->filled('program_search')) {
+            $programSearch = trim((string) $request->input('program_search'));
+            if ($programSearch !== '') {
+                $programQuery->where(function ($query) use ($programSearch) {
+                    $query->where('nama', 'like', "%{$programSearch}%")
+                        ->orWhere('jenis', 'like', "%{$programSearch}%")
+                        ->orWhere('kategori', 'like', "%{$programSearch}%");
+                });
+            }
+        }
+
+        $program = $programQuery->get();
+
         $ringkasan = [
             'ukpd' => Mitra::where('jenis', 'UKPD')->count(),
             'csr' => Mitra::where('jenis', 'CSR')->count(),
-            'program_aktif' => $program->whereIn('status', ['Pendaftaran', 'Berjalan'])->count(),
-            'kursi' => $program->whereIn('status', ['Pendaftaran', 'Berjalan'])->sum->sisa_kuota,
+            'program_aktif' => Program::whereIn('status', ['Pendaftaran', 'Berjalan'])->count(),
+            'kursi' => Program::whereIn('status', ['Pendaftaran', 'Berjalan'])
+                ->get()
+                ->sum(fn ($program) => max(0, (int) $program->kuota - (int) $program->peserta)),
         ];
 
-        return view('admin.pemberdayaan.index', compact('mitra', 'program', 'ringkasan'));
+        return view('admin.pemberdayaan.index', compact('mitra', 'program', 'ringkasan', 'selectedMitra', 'search', 'jenis'));
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditTrail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -37,6 +38,16 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        AuditTrail::log(
+            'login',
+            'auth',
+            'Admin "' . Auth::user()->name . '" login ke panel admin.',
+            null,
+            null,
+            ['ip' => $request->ip()],
+            Auth::user()->name
+        );
+
         return redirect()->intended(route('admin.dashboard'));
     }
 
@@ -45,7 +56,19 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
+        $userName = Auth::user()?->name ?? 'Admin';
+
         Auth::logout();
+
+        AuditTrail::log(
+            'logout',
+            'auth',
+            'Admin "' . $userName . '" logout dari panel admin.',
+            null,
+            null,
+            ['ip' => $request->ip()],
+            $userName
+        );
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

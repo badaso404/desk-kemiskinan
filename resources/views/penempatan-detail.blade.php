@@ -6,13 +6,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <div class="mb-8">
-        <a href="{{ route('penempatan.index') }}" class="inline-flex items-center gap-2 text-[14px] text-gray-500 hover:text-[#086b50] transition mb-3 font-medium">
+        <a href="{{ route('penempatan.index') }}" class="inline-flex items-center gap-2 text-[14px] text-gray-500 hover:text-[#12395B] transition mb-3 font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
             Kembali ke Data Penempatan
         </a>
         <div class="flex justify-between items-center">
             <h2 class="text-3xl font-bold text-gray-900 tracking-tight">Informasi Kandidat</h2>
-            <a href="{{ route('penempatan.edit', $penempatan->id) }}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2.5 rounded-full font-medium text-[14px] transition flex items-center gap-2">
+            <a href="{{ route('penempatan.edit', $penempatan->id) }}" class="bg-blue-50 hover:bg-blue-100 text-[#12395B] px-5 py-2.5 rounded-full font-medium text-[14px] transition flex items-center gap-2">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                 Edit Data
             </a>

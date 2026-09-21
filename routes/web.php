@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AuditTrailController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PemberdayaanController;
@@ -78,6 +79,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     // Rekomendasi: pencocokan warga dengan program
     Route::get('/rekomendasi', [RekomendasiController::class, 'index'])->name('rekomendasi.index');
     Route::get('/rekomendasi/{masyarakat}', [RekomendasiController::class, 'show'])->name('rekomendasi.show');
+
+    // Audit trail: riwayat aktivitas admin
+    Route::get('/audit-trail', [AuditTrailController::class, 'index'])->name('audit-trail');
 
     // Route Monitoring
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');

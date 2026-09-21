@@ -372,6 +372,13 @@
                         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>'
                     ],
                     [
+                        'title' => 'Audit Trail',
+                        'route' => 'admin.audit-trail',
+                        'active' => request()->routeIs('admin.audit-trail'),
+                        'roles' => ['admin'],
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h6l3-7 3 14 2-7h3"/></svg>'
+                    ],
+                    [
                         'title' => 'Pengaturan',
                         'route' => 'admin.dashboard',
                         'active' => false,

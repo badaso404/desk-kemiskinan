@@ -6,14 +6,14 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <div class="mb-6">
-        <a href="{{ route('penempatan.index') }}" class="text-[#086b50] hover:underline font-medium text-[14px] flex items-center gap-1">
+        <a href="{{ route('penempatan.index') }}" class="text-[#12395B] hover:underline font-medium text-[14px] flex items-center gap-1">
             &larr; Kembali ke Daftar Penempatan
         </a>
     </div>
 
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Detail Penempatan</h2>
-        
+
         @php
             $badgeStyle = match($penempatan->status) {
                 'Bekerja'  => 'bg-[#D1FAE5] text-[#065F46]',
@@ -51,7 +51,7 @@
                 <div><span class="text-gray-500 block text-xs uppercase tracking-wider">Pemberi Kerja / Mitra</span> <span class="font-medium text-gray-900">{{ $penempatan->program->mitra->nama ?? $penempatan->program->penyelenggara ?? '-' }}</span></div>
                 <div><span class="text-gray-500 block text-xs uppercase tracking-wider">Lokasi</span> <span class="font-medium text-gray-900">{{ $penempatan->program->lokasi ?? '-' }}</span></div>
                 <div>
-                    <span class="text-gray-500 block text-xs uppercase tracking-wider">Tanggal Penempatan</span> 
+                    <span class="text-gray-500 block text-xs uppercase tracking-wider">Tanggal Penempatan</span>
                     <span class="font-medium text-gray-900">
                         {{ $penempatan->tanggal_penempatan ? \Carbon\Carbon::parse($penempatan->tanggal_penempatan)->translatedFormat('d F Y') : 'Belum ditentukan' }}
                     </span>

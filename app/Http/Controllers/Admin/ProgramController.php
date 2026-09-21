@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditTrail;
 use App\Models\Mitra;
 use App\Models\Program;
 use Illuminate\Http\Request;
@@ -19,7 +20,16 @@ class ProgramController extends Controller
 
     public function store(Request $request)
     {
-        Program::create($this->validasi($request));
+        $program = Program::create($this->validasi($request));
+
+        AuditTrail::log(
+            'create',
+            'program',
+            'Program "' . $program->nama . '" berhasil ditambahkan.',
+            Program::class,
+            $program->id,
+            ['status' => $program->status]
+        );
 
         return redirect()
             ->route('admin.pemberdayaan', ['tab' => 'program'])
@@ -45,6 +55,15 @@ class ProgramController extends Controller
     {
         $program->update($this->validasi($request));
 
+        AuditTrail::log(
+            'update',
+            'program',
+            'Program "' . $program->nama . '" berhasil diperbarui.',
+            Program::class,
+            $program->id,
+            ['status' => $program->status]
+        );
+
         return redirect()
             ->route('admin.pemberdayaan', ['tab' => 'program'])
             ->with('sukses', 'Program berhasil diperbarui.');
@@ -52,7 +71,17 @@ class ProgramController extends Controller
 
     public function destroy(Program $program)
     {
+        $nama = $program->nama;
         $program->delete();
+
+        AuditTrail::log(
+            'delete',
+            'program',
+            'Program "' . $nama . '" berhasil dihapus.',
+            Program::class,
+            $program->id,
+            ['status' => 'deleted']
+        );
 
         return redirect()
             ->route('admin.pemberdayaan', ['tab' => 'program'])

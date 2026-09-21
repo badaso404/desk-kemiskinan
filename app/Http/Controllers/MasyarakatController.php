@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditTrail;
 use App\Models\Masyarakat;
 use Illuminate\Http\Request;
 
@@ -87,7 +88,16 @@ class MasyarakatController extends Controller
         // Default ke 'Pending' jika tidak diisi
         $validated['status_verifikasi'] = $validated['status_verifikasi'] ?? 'Pending'; 
 
-        Masyarakat::create($validated);
+        $masyarakat = Masyarakat::create($validated);
+
+        AuditTrail::log(
+            'create',
+            'masyarakat',
+            'Data masyarakat "' . $masyarakat->nama . '" berhasil ditambahkan.',
+            Masyarakat::class,
+            $masyarakat->id,
+            ['nik' => $masyarakat->nik]
+        );
 
         return redirect()->route('admin.masyarakat')->with('success', 'Data masyarakat berhasil ditambahkan!');
     }
@@ -134,6 +144,15 @@ class MasyarakatController extends Controller
 
         $masyarakat->update($validated);
 
+        AuditTrail::log(
+            'update',
+            'masyarakat',
+            'Data masyarakat "' . $masyarakat->nama . '" berhasil diperbarui.',
+            Masyarakat::class,
+            $masyarakat->id,
+            ['nik' => $masyarakat->nik]
+        );
+
         return redirect()->route('admin.masyarakat')->with('success', 'Data masyarakat berhasil diperbarui!');
     }
 
@@ -142,7 +161,19 @@ class MasyarakatController extends Controller
         $masyarakat = Masyarakat::find($id);
 
         if ($masyarakat) {
+            $nama = $masyarakat->nama;
+            $nik = $masyarakat->nik;
             $masyarakat->delete();
+
+            AuditTrail::log(
+                'delete',
+                'masyarakat',
+                'Data masyarakat "' . $nama . '" berhasil dihapus.',
+                Masyarakat::class,
+                $masyarakat->id,
+                ['nik' => $nik]
+            );
+
             return redirect()->route('admin.masyarakat')->with('success', 'Data masyarakat berhasil dihapus!');
         }
 

@@ -47,7 +47,7 @@
     <div class="stat-box">
         <div class="stat-box-head">
             <span>Program Aktif</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="#2f7d57" stroke-width="1.8">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#12395B" stroke-width="1.8">
                 <path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 12v4c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-4"/>
             </svg>
         </div>

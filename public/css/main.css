@@ -179,7 +179,7 @@ img {
     aspect-ratio: 16 / 10;
     object-fit: cover;
     border-radius: 12px;
-    box-shadow: 0 6px 24px rgba(20, 69, 47, .12);
+    box-shadow: 0 6px 24px rgba(18, 57, 91, .12);
 }
 
 /* ============ STATISTIK ============ */
