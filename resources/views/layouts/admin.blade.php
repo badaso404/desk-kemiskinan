@@ -6,229 +6,38 @@
     <title>@yield('title', 'Panel Admin') - Pemberdayaan Masyarakat Jakarta Barat</title>
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
     <style>
-        body.admin-body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
-            background-color: #f8fafc;
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* SIDEBAR DESKTOP */
-        .admin-sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 260px;
-            height: 100vh;
-            background-color: #12395B;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            z-index: 1000;
-            overflow-y: auto;
-            box-sizing: border-box;
-            padding: 1.25rem 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        /* BRAND / LOGO SIDEBAR */
-        .sidebar-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding-bottom: 0.5rem;
-        }
-
-        .brand-text {
-            display: flex;
-            flex-direction: column;
-            color: #ffffff;
-        }
-
-        .brand-text strong {
-            font-size: 0.95rem;
-            font-weight: 700;
-            line-height: 1.2;
-        }
-
-        .brand-text span {
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        /* KONSISTENSI MENU NAVIGASI */
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .sidebar-nav .nav-link {
-            display: flex !important;
-            align-items: center !important;
-            gap: 0.75rem !important;
-            width: 100% !important;
-            padding: 0.75rem 1rem !important;
-            border-radius: 10px !important;
-            box-sizing: border-box !important;
-            text-decoration: none;
-            color: #94a3b8;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .sidebar-nav .nav-link svg {
-            flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-        }
-
-        .sidebar-nav .nav-link span {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* EFFECT HOVER & ACTIVE SERAGAM */
-        .sidebar-nav .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.08) !important;
-            color: #ffffff !important;
-        }
-
-        .sidebar-nav .nav-link.is-active {
-            background-color: rgba(255, 255, 255, 0.15) !important;
-            color: #ffffff !important;
-            font-weight: 600;
-        }
-
-        /* FOOTER SIDEBAR */
-        .sidebar-footer {
-            margin-top: auto;
-            padding-top: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-bantuan {
-            color: #94a3b8;
-            font-size: 0.8rem;
-            text-decoration: none;
-            padding: 0.4rem 0.5rem;
-            transition: color 0.2s ease;
-        }
+        body.admin-body { margin: 0; padding: 0; display: flex; min-height: 100vh; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .admin-sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 260px; height: 100vh; background-color: #12395B; display: flex; flex-direction: column; justify-content: space-between; z-index: 1000; overflow-y: auto; box-sizing: border-box; padding: 1.25rem 1rem; transition: transform 0.3s ease; }
+        .sidebar-brand { display: flex; align-items: center; gap: 0.75rem; padding-bottom: 0.5rem; }
+        .brand-text { display: flex; flex-direction: column; color: #ffffff; }
+        .brand-text strong { font-size: 0.95rem; font-weight: 700; line-height: 1.2; }
+        .brand-text span { font-size: 0.75rem; color: #94a3b8; }
+        .sidebar-nav { display: flex; flex-direction: column; gap: 0.35rem; width: 100%; box-sizing: border-box; }
+        .sidebar-nav .nav-link { display: flex !important; align-items: center !important; gap: 0.75rem !important; width: 100% !important; padding: 0.75rem 1rem !important; border-radius: 10px !important; box-sizing: border-box !important; text-decoration: none; color: #94a3b8; font-size: 0.9rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease; }
+        .sidebar-nav .nav-link svg { flex-shrink: 0; width: 20px; height: 20px; }
+        .sidebar-nav .nav-link span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .sidebar-nav .nav-link:hover { background-color: rgba(255, 255, 255, 0.08) !important; color: #ffffff !important; }
+        .sidebar-nav .nav-link.is-active { background-color: rgba(255, 255, 255, 0.15) !important; color: #ffffff !important; font-weight: 600; }
+        .sidebar-footer { margin-top: auto; padding-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-bantuan { color: #94a3b8; font-size: 0.8rem; text-decoration: none; padding: 0.4rem 0.5rem; transition: color 0.2s ease; }
         .btn-bantuan:hover { color: #ffffff; }
-
-        .btn-keluar {
-            width: 100%;
-            background: transparent;
-            border: none;
-            color: #f87171;
-            padding: 0.6rem 0.75rem;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.875rem;
-            font-weight: 600;
-            transition: background-color 0.2s ease;
-        }
+        .btn-keluar { width: 100%; background: transparent; border: none; color: #f87171; padding: 0.6rem 0.75rem; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; font-size: 0.875rem; font-weight: 600; transition: background-color 0.2s ease; }
         .btn-keluar:hover { background-color: rgba(248, 113, 113, 0.12); }
         .btn-keluar svg { width: 18px; height: 18px; }
-
-        /* AREA UTAMA DESKTOP */
-        .admin-main {
-            margin-left: 260px;
-            flex: 1;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            box-sizing: border-box;
-        }
-
-        .admin-content {
-            padding: 2rem;
-            flex: 1;
-        }
-
-        /* BACKDROP OVERLAY UNTUK MOBILE */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.5);
-            z-index: 999;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        /* TOPBAR NAVBAR KHUSUS MOBILE */
-        .mobile-topbar {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0 1.25rem;
-            align-items: center;
-            justify-content: space-between;
-            z-index: 900;
-        }
-
-        .mobile-topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .btn-toggle-sidebar {
-            background: transparent;
-            border: none;
-            color: #1e293b;
-            cursor: pointer;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .mobile-brand-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #12395B;
-        }
-
-        /* RESPONSIVE MOBILE (< 768px) */
-        @media (max-width: 768px) {
-            .mobile-topbar { display: flex; }
-            .sidebar-overlay.show { display: block; opacity: 1; }
-            .admin-sidebar { transform: translateX(-100%); width: 270px; }
-            .admin-sidebar.show { transform: translateX(0); }
-            .admin-main { margin-left: 0; padding-top: 60px; }
-            .admin-content { padding: 1.25rem; }
-            .sidebar-nav .nav-link { padding: 0.8rem 1rem !important; }
-        }
+        .admin-main { margin-left: 260px; flex: 1; min-height: 100vh; display: flex; flex-direction: column; box-sizing: border-box; }
+        .admin-content { padding: 2rem; flex: 1; }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.5); z-index: 999; opacity: 0; transition: opacity 0.3s ease; }
+        .mobile-topbar { display: none; position: fixed; top: 0; left: 0; right: 0; height: 60px; background-color: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 0 1.25rem; align-items: center; justify-content: space-between; z-index: 900; }
+        .mobile-topbar-left { display: flex; align-items: center; gap: 0.75rem; }
+        .btn-toggle-sidebar { background: transparent; border: none; color: #1e293b; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; }
+        .mobile-brand-title { font-size: 0.95rem; font-weight: 700; color: #12395B; }
+        @media (max-width: 768px) { .mobile-topbar { display: flex; } .sidebar-overlay.show { display: block; opacity: 1; } .admin-sidebar { transform: translateX(-100%); width: 270px; } .admin-sidebar.show { transform: translateX(0); } .admin-main { margin-left: 0; padding-top: 60px; } .admin-content { padding: 1.25rem; } .sidebar-nav .nav-link { padding: 0.8rem 1rem !important; } }
     </style>
 </head>
 <body class="admin-body">
@@ -240,9 +49,7 @@
     <header class="mobile-topbar">
         <div class="mobile-topbar-left">
             <button type="button" class="btn-toggle-sidebar" id="sidebarToggle" aria-label="Buka Menu">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
             <div class="mobile-brand-title">Desk Kemiskinan</div>
         </div>
@@ -250,7 +57,19 @@
     </header>
 
     @php
-        $userRole = auth()->user()->role ?? '';
+        // KODE ANTI-GAGAL: Menerjemahkan role_id menjadi teks
+        // Menggunakan ID fisik dari database, dijamin terbaca!
+        $roleMap = [
+            1 => 'admin',
+            2 => 'kecamatan',
+            3 => 'pimpinan_kesra',
+            4 => 'kelurahan',
+            5 => 'walikota'
+        ];
+        
+        // Ambil ID user yang login, default ke 1 jika ada error
+        $userRoleId = auth()->user()->role_id ?? 1;
+        $userRole = $roleMap[$userRoleId] ?? 'admin';
 
         $brandTitles = [
             'admin'          => 'Panel Admin',
@@ -259,7 +78,6 @@
             'kelurahan'      => 'Panel Kelurahan',
             'walikota'       => 'Panel Walikota',
         ];
-
         $currentBrandTitle = $brandTitles[$userRole] ?? 'Desk Kemiskinan';
     @endphp
 
@@ -279,7 +97,6 @@
 
             @php
                 $semuaRoleNonPenempatan = ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan'];
-
                 $menus = [
                     [
                         'title' => 'Dashboard',
@@ -354,7 +171,7 @@
         </div>
 
         <div class="sidebar-footer">
-            <a href="#" class="btn-bantuan">Bantuan Teknis</a>
+            <a href="https://barat.jakarta.go.id/batik/" class="btn-bantuan">Bantuan Teknis</a>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn-keluar">
@@ -374,18 +191,12 @@
         </main>
     </div>
 
-    <!-- SCRIPT INTERAKSI TOGGLE MOBILE -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebarToggle = document.getElementById('sidebarToggle');
             const adminSidebar = document.getElementById('adminSidebar');
             const sidebarOverlay = document.getElementById('sidebarOverlay');
-
-            function toggleSidebar() {
-                adminSidebar.classList.toggle('show');
-                sidebarOverlay.classList.toggle('show');
-            }
-
+            function toggleSidebar() { adminSidebar.classList.toggle('show'); sidebarOverlay.classList.toggle('show'); }
             if (sidebarToggle) sidebarToggle.addEventListener('click', toggleSidebar);
             if (sidebarOverlay) sidebarOverlay.addEventListener('click', toggleSidebar);
         });

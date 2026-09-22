@@ -10,21 +10,50 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = [
-            ['name' => 'Administrator', 'email' => 'admin@gmail.com', 'role' => 'admin'],
-            ['name' => 'Kecamatan Cengkareng', 'email' => 'kecamatan@gmail.com', 'role' => 'kecamatan'],
-            ['name' => 'Pimpinan Kesra', 'email' => 'kesra@gmail.com', 'role' => 'pimpinan_kesra'],
-            ['name' => 'Kelurahan Kapuk', 'email' => 'kelurahan@gmail.com', 'role' => 'kelurahan'],
-            ['name' => 'Bapak Walikota', 'email' => 'walikota@gmail.com', 'role' => 'walikota'],
-        ];
+        // 1. Akun Admin
+        User::create([
+            'name' => 'Administrator',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('admin2026'),
+            'role_id' => 1, // ID untuk 'admin'
+            'role' => 'admin',
 
-        foreach ($users as $user) {
-            User::create([
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'password' => Hash::make('password123'),
-                'role' => $user['role'],
-            ]);
-        }
+        ]);
+
+        // 2. Akun Kecamatan
+        User::create([
+            'name' => 'Camat Sukamaju',
+            'email' => 'kecamatan@gmail.com',
+            'password' => Hash::make('admin2026'),
+            'role_id' => 2, // ID untuk 'kecamatan'
+            'role' => 'kecamatan',
+        ]);
+
+        // 3. Akun Kelurahan
+        User::create([
+            'name' => 'Lurah Sukamaju',
+            'email' => 'kelurahan@gmail.com',
+            'password' => Hash::make('admin2026'),
+            'role_id' => 3, // ID untuk 'kelurahan'
+            'role' => 'kelurahan',
+        ]);
+
+        // 3. Akun Pimpinan Kesra
+        User::create([
+            'name' => 'Apa ajalah',
+            'email' => 'kesra@gmail.com',
+            'password' => Hash::make('admin2026'),
+            'role_id' => 4, // ID untuk 'kelurahan'
+            'role' => 'pimpinan_kesra',
+        ]);
+
+        // 4. Akun Walikota
+        User::create([
+            'name' => 'Bapak Walikota',
+            'email' => 'walikota@gmail.com',
+            'password' => Hash::make('admin2026'),
+            'role_id' => 5, // ID untuk 'walikota'
+            'role' => 'walikota',
+        ]);
     }
 }
