@@ -303,6 +303,10 @@
             <div style="margin-bottom: 0.75rem;">
                 @if(($masyarakat->status_verifikasi ?? '') === 'Terverifikasi')
                     <span class="badge-status badge-verified">Sudah Terverifikasi</span>
+                    
+                    <div style="font-size: 0.8rem; color: #6b7280; margin-top: 0.25rem;">
+                        Tgl Verifikasi: {{ \Carbon\Carbon::parse($masyarakat->tanggal_verifikasi ?? $masyarakat->updated_at)->format('d/m/Y') }}
+                    </div>
                 @else
                     <span class="badge-status badge-pending">Belum Terverifikasi</span>
                 @endif
@@ -494,27 +498,7 @@
     </div>
 
     <!-- BANNER VERIFIKASI PADA BAGIAN PALING BAWAH -->
-    @if(($masyarakat->status_verifikasi ?? '') !== 'Terverifikasi')
-        <div class="bottom-verify-banner">
-            <div class="bottom-verify-text">
-                <h4>Verifikasi Kelayakan & Keabsahan Data Warga</h4>
-                <p>Status data saat ini <strong>Belum Terverifikasi</strong>. Lakukan verifikasi agar warga dapat direkomendasikan pada program pemberdayaan.</p>
-            </div>
-            <button type="button" class="btn-bottom-verify" onclick="openVerifyModal()">
-                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
-                Verifikasi Data Sekarang
-            </button>
-        </div>
-    @else
-        <div class="bottom-verified-banner">
-            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <span>Data masyarakat ini telah <strong>Terverifikasi</strong> dan valid dalam sistem.</span>
-        </div>
-    @endif
+    
 </div>
 
 <!-- FORM DISIMPAN SECARA HIDDEN UNTUK EKSEKUSI VERIFIKASI -->

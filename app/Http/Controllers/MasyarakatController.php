@@ -51,7 +51,7 @@ class MasyarakatController extends Controller
 
     public function create()
     {
-        return view('admin.masyarakat_create'); // Disesuaikan dengan struktur folder view Anda
+        return view('masyarakat_create'); // Disesuaikan dengan struktur folder view Anda
     }
 
     public function store(Request $request)

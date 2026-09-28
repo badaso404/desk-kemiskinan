@@ -13,6 +13,7 @@ use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\MonitoringController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenempatanController;
+use App\Http\Controllers\Admin\VerifikasiMasyarakatController;
 /*
 |--------------------------------------------------------------------------
 | Halaman Publik
@@ -100,4 +101,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/penempatan/{id}/edit', [PenempatanController::class, 'edit'])->name('penempatan.edit');
     Route::put('/penempatan/{id}', [PenempatanController::class, 'update'])->name('penempatan.update');
     Route::get('/penempatan/{id}', [PenempatanController::class, 'show'])->name('penempatan.show');
+
+});
+// Verifikasi 
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    // Route GET Halaman Utama Verifikasi
+    Route::get('/Verifikasi-data', [VerifikasiMasyarakatController::class, 'verifikasi_masyarakat'])
+        ->name('Verifikasi-data.verifikasi_masyarakat');
+
+    // Route PUT untuk menyimpan/memperbarui status verifikasi (TAMBAHKAN INI)
+    Route::put('/Verifikasi-data/{id}', [VerifikasiMasyarakatController::class, 'update'])
+        ->name('Verifikasi-data.verifikasi_masyarakat.update');
 });

@@ -443,7 +443,7 @@
                         <span class="audit-badge badge-{{ $trail->action }}">{{ $trail->action }}</span>
                         <div class="audit-action">{{ $trail->description }}</div>
                     </div>
-                    <div class="audit-meta">Pengguna {{ $trail->user_name }} · {{ $trail->created_at->translatedFormat('d/m/Y, H:i') }}</div>
+                    <div class="audit-meta">Pengguna {{ $trail->user_name }} · {{ $trail->created_at->setTimezone('Asia/Jakarta')->translatedFormat('d/m/Y, H:i') }}</div>
                     @if (!empty($trail->metadata))
                         <div class="audit-extra">
                             @foreach ($trail->metadata as $key => $value)

@@ -278,7 +278,7 @@
             </div>
 
             @php
-                $semuaRoleNonPenempatan = ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan'];
+                $semuaRoleNonPenempatan = ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan', 'walikota'];
 
                 $menus = [
                     [
@@ -292,8 +292,15 @@
                         'title' => 'Data Masyarakat',
                         'route' => 'admin.masyarakat',
                         'active' => request()->routeIs('admin.masyarakat*'),
-                        'roles' => $semuaRoleNonPenempatan,
+                        'roles' => ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan'],
                         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 4 2 9l10 5 10-5-10-5Z"/><path d="M6 12v4c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-4"/></svg>'
+                    ],
+                    [
+                        'title' => 'Verifikasi Data Masyarakat',
+                        'route' => 'admin.Verifikasi-data.verifikasi_masyarakat',
+                        'active' => request()->routeIs('admin.Verifikasi-data.*'),
+                        'roles' => ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan'],
+                        'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>'
                     ],
                     [
                         'title' => 'Pemberdayaan',
@@ -306,7 +313,7 @@
                         'title' => 'Rekomendasi Program',
                         'route' => 'admin.rekomendasi.index',
                         'active' => request()->routeIs('admin.rekomendasi*'),
-                        'roles' => $semuaRoleNonPenempatan,
+                        'roles' => ['admin', 'kecamatan', 'pimpinan_kesra', 'kelurahan'],
                         'icon'  => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'
                     ],
                     [

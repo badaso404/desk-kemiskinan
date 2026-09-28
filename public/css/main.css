@@ -6,14 +6,16 @@
 }
 
 :root {
-    --hijau: #1c5c3f;
-    --hijau-tua: #14452f;
-    --hijau-muda: #d6ece0;
-    --krem: #faf8f3;
+    --hijau: #12395B;          /* Tetap Navy untuk Header & Footer */
+    --hijau-tua: #0f2c47;
+    --hijau-muda: #e0f2fe;     /* Diubah ke Biru Soft */
+    --biru-aksen: #2563eb;     /* Biru Aksen */
+    --biru-hover: #1d4ed8;
+    --krem: #f8fafc;
     --putih: #ffffff;
-    --garis: #e7e4dc;
-    --teks: #1a1a1a;
-    --teks-samar: #5b6156;
+    --garis: #e2e8f0;
+    --teks: #1e293b;
+    --teks-samar: #64748b;
     --sisi: 40px;
 }
 
@@ -44,7 +46,7 @@ img {
     position: sticky;
     top: 0;
     z-index: 20;
-    background: var(--krem);
+    background: var(--putih);
     border-bottom: 1px solid var(--garis);
     padding: 12px var(--sisi);
 }
@@ -105,13 +107,13 @@ img {
 }
 
 .nav-item:hover {
-    color: var(--hijau);
+    color: var(--biru-aksen);
 }
 
 .nav-item.is-active {
-    color: var(--hijau);
+    color: var(--biru-aksen);
     font-weight: 600;
-    border-bottom: 2px solid var(--hijau);
+    border-bottom: 2px solid var(--biru-aksen);
 }
 
 /* ============ PLACEHOLDER GAMBAR ============ */
@@ -119,8 +121,8 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #e8efe9, #d6ece0);
-    color: var(--hijau);
+    background: linear-gradient(135deg, #dbeafe, #eff6ff); /* Diubah ke Biru */
+    color: var(--biru-aksen); /* Diubah ke Biru */
     font-size: 14px;
     font-weight: 600;
     text-align: center;
@@ -147,6 +149,7 @@ img {
     line-height: 1.18;
     font-weight: 700;
     letter-spacing: -1.2px;
+    color: var(--hijau);
 }
 
 .hero-text p {
@@ -160,17 +163,19 @@ img {
     display: inline-block;
     margin-top: 28px;
     padding: 13px 26px;
-    border: 1px solid var(--garis);
+    border: 1px solid var(--biru-aksen);
     border-radius: 8px;
     background: var(--putih);
-    color: var(--hijau);
+    color: var(--biru-aksen);
     text-decoration: none;
     font-size: 15px;
     font-weight: 600;
+    transition: all .15s ease;
 }
 
 .btn-outline:hover {
-    border-color: var(--hijau);
+    background: var(--biru-aksen);
+    color: var(--putih);
 }
 
 .hero-image,
@@ -186,6 +191,7 @@ img {
 .stats {
     padding: 34px var(--sisi);
     border-bottom: 1px solid var(--garis);
+    background: var(--putih);
 }
 
 .stats-grid {
@@ -197,7 +203,7 @@ img {
 }
 
 .stat-card {
-    background: var(--putih);
+    background: var(--krem);
     border: 1px solid var(--garis);
     border-radius: 10px;
     padding: 26px 18px;
@@ -208,7 +214,7 @@ img {
     display: block;
     font-size: 38px;
     font-weight: 700;
-    color: var(--hijau);
+    color: var(--biru-aksen);
     letter-spacing: -1px;
 }
 
@@ -232,6 +238,7 @@ img {
     font-size: 32px;
     font-weight: 700;
     letter-spacing: -.6px;
+    color: var(--hijau);
 }
 
 .steps-grid {
@@ -242,7 +249,6 @@ img {
     margin-top: 44px;
 }
 
-/* garis penghubung antar langkah */
 .steps-grid::before {
     content: '';
     position: absolute;
@@ -250,7 +256,7 @@ img {
     left: 12.5%;
     right: 12.5%;
     height: 2px;
-    background: var(--hijau-muda);
+    background: #bfdbfe; /* Diubah ke Biru Muda */
     z-index: 0;
 }
 
@@ -266,12 +272,13 @@ img {
     height: 66px;
     margin: 0 auto 18px;
     border-radius: 50%;
-    background: var(--hijau-muda);
-    color: var(--hijau);
+    background: #eff6ff; /* Diubah ke Biru Soft */
+    color: var(--biru-aksen); /* Diubah ke Biru */
     display: flex;
     align-items: center;
     justify-content: center;
     border: 4px solid var(--krem);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12); /* Diubah shadow biru */
 }
 
 .step-icon svg {
@@ -310,6 +317,7 @@ img {
     font-size: 30px;
     font-weight: 700;
     letter-spacing: -.6px;
+    color: var(--hijau);
 }
 
 .training-head p {
@@ -319,11 +327,16 @@ img {
 }
 
 .link-all {
-    color: var(--hijau);
+    color: var(--biru-aksen);
     text-decoration: none;
     font-size: 15px;
     font-weight: 600;
     white-space: nowrap;
+}
+
+.link-all:hover {
+    color: var(--biru-hover);
+    text-decoration: underline;
 }
 
 .training-grid {
@@ -350,12 +363,14 @@ img {
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
+    background-color: #dbeafe; /* Diubah ke Biru */
+    color: var(--biru-aksen); /* Diubah ke Biru */
 }
 
 .training-card:hover {
     transform: translateY(-3px);
-    border-color: var(--hijau-muda);
-    box-shadow: 0 10px 26px rgba(20, 69, 47, .12);
+    border-color: #93c5fd; /* Diubah ke Biru Muda */
+    box-shadow: 0 10px 26px rgba(37, 99, 235, .12); /* Diubah shadow biru */
 }
 
 .training-body {
@@ -374,7 +389,7 @@ img {
 
 .tag {
     background: var(--hijau-muda);
-    color: var(--hijau-tua);
+    color: #2563eb; /* Diubah ke Biru */
     padding: 4px 12px;
     border-radius: 6px;
     font-size: 12px;
@@ -435,7 +450,7 @@ img {
     align-items: center;
     gap: 7px;
     margin-top: 20px;
-    color: var(--hijau);
+    color: var(--biru-aksen);
     font-size: 15px;
     font-weight: 600;
 }
@@ -469,7 +484,7 @@ img {
 }
 
 .detail-back:hover {
-    color: var(--hijau);
+    color: var(--biru-aksen);
 }
 
 .detail-back svg {
@@ -487,6 +502,7 @@ img {
     font-weight: 700;
     line-height: 1.2;
     letter-spacing: -.8px;
+    color: var(--hijau);
 }
 
 .detail-org {
@@ -521,6 +537,7 @@ img {
     font-size: 22px;
     font-weight: 700;
     letter-spacing: -.4px;
+    color: var(--hijau);
 }
 
 .detail-block p {
@@ -550,7 +567,7 @@ img {
     height: 17px;
     flex-shrink: 0;
     margin-top: 3px;
-    color: var(--hijau);
+    color: var(--biru-aksen);
 }
 
 .detail-side {
