@@ -361,7 +361,7 @@
         </div>
 
         <div class="sidebar-footer">
-            <a href="#" class="btn-bantuan">Bantuan Teknis</a>
+            <a href="https://api.whatsapp.com/send/?phone=%2B6281211255934&text&type=phone_number&app_absent=0" class="btn-bantuan">Bantuan Teknis</a>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn-keluar">

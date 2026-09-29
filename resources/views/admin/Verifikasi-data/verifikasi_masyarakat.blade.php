@@ -154,6 +154,89 @@
     }
     .btn-submit:hover { background-color: #0d273f; }
 
+    /* MODAL POPUP STYLING */
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(4px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .modal-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 1.75rem;
+        max-width: 460px;
+        width: 90%;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        box-sizing: border-box;
+    }
+
+    .modal-icon-wrapper {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #ebf3fa;
+        color: #12395B;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .modal-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .modal-desc {
+        font-size: 0.875rem;
+        color: #475569;
+        line-height: 1.5;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-actions {
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-end;
+    }
+
+    .btn-modal-cancel {
+        background: #f1f5f9;
+        color: #475569;
+        border: none;
+        padding: 0.65rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .btn-modal-cancel:hover { background: #e2e8f0; }
+
+    .btn-modal-confirm {
+        background: #12395B;
+        color: #ffffff;
+        border: none;
+        padding: 0.65rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .btn-modal-confirm:hover { background: #0d273f; }
+
     @media (max-width: 1024px) {
         .verify-grid { grid-template-columns: 1fr; }
         .stats-grid { grid-template-columns: 1fr; }
@@ -207,7 +290,6 @@
                         data-search="{{ strtolower($item->nama . ' ' . $item->nik) }}">
                             <div class="citizen-item-name">{{ $item->nama }}</div>
                             <div class="citizen-item-nik">NIK: {{ $item->nik }}</div>
-                            <!-- badge & kecamatan -->
                     </a>
                 @empty
                     <div style="text-align: center; color: #94a3b8; padding: 2.5rem 0; font-size: 0.85rem;">
@@ -283,21 +365,38 @@
                 </div>
 
                 <!-- SECTION 2: FORM VERIFIKASI DATA -->
-                <form action="{{ route('admin.Verifikasi-data.verifikasi_masyarakat.update', $selectedMasyarakat->id) }}" method="POST" style="margin-top: 1.5rem;">
+                <form id="verifyForm" action="{{ route('admin.Verifikasi-data.verifikasi_masyarakat.update', $selectedMasyarakat->id) }}" method="POST" style="margin-top: 1.5rem;">
                     @csrf
                     @method('PUT')
 
                     <div class="card-title" style="font-size: 0.9rem; border-bottom: none; margin-bottom: 0.5rem; padding-bottom: 0;">
-                        Formulir Verifikasi Status Data
+                        Formulir Verifikasi Status Data & Desil
                     </div>
 
                     <div class="form-row">
+                        <!-- INPUT DESIL (1 - 10) -->
+                        <div class="form-group">
+                            <label class="form-label">Tingkat Desil DTSEN</label>
+                            <select name="desil" class="form-control">
+                                <option value="">-- Pilih Desil (Opsional) --</option>
+                                @for ($i = 1; $i <= 10; $i++)
+                                    <option value="{{ $i }}" {{ (old('desil', $selectedMasyarakat->desil ?? '') == $i) ? 'selected' : '' }}>
+                                        Desil {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+
+                        <!-- TANGGAL VERIFIKASI -->
                         <div class="form-group">
                             <label class="form-label">Tanggal Verifikasi <span style="color: #ef4444;">*</span></label>
                             <input type="date" name="tanggal_verifikasi" class="form-control" value="{{ date('Y-m-d') }}" required>
                         </div>
+                    </div>
 
-                        <div class="form-group">
+                    <div class="form-row">
+                        <!-- STATUS VERIFIKASI -->
+                        <div class="form-group" style="grid-column: span 2;">
                             <label class="form-label">Status Verifikasi <span style="color: #ef4444;">*</span></label>
                             <select name="status_verifikasi" class="form-control" required>
                                 <option value="Pending" {{ ($selectedMasyarakat->status_verifikasi ?? '') === 'Pending' ? 'selected' : '' }}>Pending / Belum Terverifikasi</option>
@@ -308,11 +407,12 @@
 
                     <div class="form-group">
                         <label class="form-label">Catatan Verifikasi</label>
-                        <textarea name="catatan_verifikasi" rows="3" class="form-control" placeholder="Tambahkan catatan verifikasi data masyarakat (contoh: Dokumen NIK dan domisili valid)..."></textarea>
+                        <textarea name="catatan_verifikasi" rows="3" class="form-control" placeholder="Tambahkan catatan hasil pengecekan manual..."></textarea>
                     </div>
 
-                    <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 1.5rem; pt-1rem; border-top: 1px solid #f1f5f9;">
-                        <button type="submit" class="btn-submit">
+                    <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+                        <!-- Tombol diubah tipe nya menjadi button agar tidak langsung submit -->
+                        <button type="button" class="btn-submit" onclick="openVerifyModal()">
                             Simpan Hasil Verifikasi
                         </button>
                     </div>
@@ -324,6 +424,26 @@
             @endif
         </div>
 
+    </div>
+</div>
+
+<!-- MODAL POPUP KONFIRMASI SIMPAN VERIFIKASI -->
+<div class="modal-backdrop" id="verifyConfirmModal">
+    <div class="modal-card">
+        <div class="modal-icon-wrapper">
+            <svg width="26" height="26" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </div>
+        <h3 class="modal-title">Konfirmasi Verifikasi Data</h3>
+        <p class="modal-desc">
+            Apakah Anda yakin ingin menyimpan hasil verifikasi dan data Desil untuk warga atas nama 
+            <strong>{{ $selectedMasyarakat->nama ?? '' }}</strong> (NIK: {{ $selectedMasyarakat->nik ?? '' }})?
+        </p>
+        <div class="modal-actions">
+            <button type="button" class="btn-modal-cancel" onclick="closeVerifyModal()">Batal</button>
+            <button type="button" class="btn-modal-confirm" onclick="submitVerifyForm()">Ya, Simpan Sekarang</button>
+        </div>
     </div>
 </div>
 
@@ -341,5 +461,32 @@
             }
         });
     }
+
+    // Fungsi Pengelolaan Modal Pop-Up
+    function openVerifyModal() {
+        const form = document.getElementById('verifyForm');
+        // Panggil validasi HTML bawaan (required input)
+        if (form && form.checkValidity()) {
+            document.getElementById('verifyConfirmModal').style.display = 'flex';
+        } else if (form) {
+            form.reportValidity();
+        }
+    }
+
+    function closeVerifyModal() {
+        document.getElementById('verifyConfirmModal').style.display = 'none';
+    }
+
+    function submitVerifyForm() {
+        document.getElementById('verifyForm').submit();
+    }
+
+    // Menutup modal jika area di luar kotak modal diklik
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('verifyConfirmModal');
+        if (event.target === modal) {
+            closeVerifyModal();
+        }
+    });
 </script>
 @endsection

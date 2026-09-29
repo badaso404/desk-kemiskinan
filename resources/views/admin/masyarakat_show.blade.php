@@ -311,7 +311,18 @@
                     <span class="badge-status badge-pending">Belum Terverifikasi</span>
                 @endif
             </div>
-
+            <!-- TAMPILAN INFORMASI DESIL (TAMBAHAN BARU) -->
+            <div style="margin-bottom: 0.75rem;">
+                @if(!empty($masyarakat->desil))
+                    <span style="display: inline-block; padding: 4px 12px; background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; border-radius: 9999px; font-size: 0.8rem; font-weight: 700;">
+                        Desil {{ $masyarakat->desil }}
+                    </span>
+                @else
+                    <span style="display: inline-block; padding: 4px 12px; background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; border-radius: 9999px; font-size: 0.78rem; font-weight: 600;">
+                        Desil Belum Diisi
+                    </span>
+                @endif
+            </div>
             <!-- BADGE STATUS PEKERJAAN -->
             <span style="display: inline-block; padding: 6px 14px; background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; border-radius: 9999px; font-size: 0.8rem; font-weight: 600;">
                 {{ $masyarakat->status_pekerjaan }}

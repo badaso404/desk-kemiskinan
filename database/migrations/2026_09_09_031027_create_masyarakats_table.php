@@ -31,6 +31,7 @@ return new class extends Migration
 
             // Step 3: Kondisi Ekonomi
             $table->string('status_dtks')->nullable();
+            $table->string('desil')->nullable(); // Ditambahkan di sini tanpa ->after()
             $table->string('pendapatan_bulanan')->nullable();
             $table->integer('jumlah_tanggungan')->nullable()->default(0);
             $table->string('status_rumah')->nullable();

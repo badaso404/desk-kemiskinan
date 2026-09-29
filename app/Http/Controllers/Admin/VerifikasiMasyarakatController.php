@@ -46,6 +46,7 @@ class VerifikasiMasyarakatController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'desil'              => 'nullable|string',
             'tanggal_verifikasi' => 'required|date',
             'status_verifikasi'  => 'required|in:Pending,Terverifikasi',
             'catatan_verifikasi' => 'nullable|string',
@@ -54,6 +55,8 @@ class VerifikasiMasyarakatController extends Controller
         $masyarakat = Masyarakat::findOrFail($id);
         
         $masyarakat->update([
+            'desil'              => $request->desil,
+            'tanggal_verifikasi' => $request->tanggal_verifikasi ?? now()->toDateString(),
             'status_verifikasi'  => $request->status_verifikasi,
             'catatan_verifikasi' => $request->catatan_verifikasi,
             'updated_at'         => now(),
@@ -61,12 +64,14 @@ class VerifikasiMasyarakatController extends Controller
 
         if (class_exists(AuditTrail::class)) {
             AuditTrail::log(
-                'update',
+                'update_desil',
                 'masyarakat',
                 'Verifikasi status masyarakat "' . $masyarakat->nama . '" diubah menjadi ' . $request->status_verifikasi,
                 Masyarakat::class,
                 $masyarakat->id,
-                ['nik' => $masyarakat->nik, 'status_verifikasi' => $request->status_verifikasi]
+                ['nik' => $masyarakat->nik, 'status_verifikasi' => $request->status_verifikasi,
+                'desil' => $request->desil ? 'Desil ' . $request->desil : '-']
+                
             );
         }
 

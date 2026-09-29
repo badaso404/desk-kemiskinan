@@ -15,5 +15,6 @@ class Masyarakat extends Model
         'bantuan' => 'array',
         'sertifikat' => 'array',
         'tanggal_lahir' => 'date',
+        
     ];
 }
