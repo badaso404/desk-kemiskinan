@@ -22,6 +22,38 @@
         background-color: #0d2a43;
         color: #ffffff; 
     }
+
+    /* TOMBOL IMPORT (OUTLINE) */
+    .btn-import {
+        background-color: #ffffff;
+        color: #12395B;
+        border: 1px solid #12395B;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        font-family: inherit;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .btn-import:hover {
+        background-color: #ebf3fa;
+        color: #12395B;
+    }
+
+    /* Wrapper tombol di header */
+    .head-actions {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
     .btn-secondary { background-color: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; padding: 0.55rem 1rem; border-radius: 8px; cursor: pointer; font-weight: 500; display: inline-flex; justify-content: center; align-items: center; }
     .btn-secondary:hover { background-color: #e2e8f0; }
     .btn-reset { color: #b91c1c; text-decoration: none; font-size: 0.875rem; padding: 0.55rem 0.75rem; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; }
@@ -66,7 +98,9 @@
 
     @media (max-width: 640px) {
         .page-head-flex { flex-direction: column; align-items: stretch; }
-        .btn-primary { width: 100%; }
+        .head-actions { flex-direction: column; width: 100%; }
+        .head-actions .btn-primary,
+        .head-actions .btn-import { width: 100%; }
         .stat-grid { grid-template-columns: 1fr; }
     }
 </style>
@@ -76,9 +110,19 @@
         <h1>Data Masyarakat</h1>
         <p>Kelola data warga pencari kerja, status pekerjaan, status verifikasi, dan wilayah.</p>
     </div>
-    <div>
+    <div class="head-actions">
+        <a href=# class="btn-import">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M12 12V4m0 0L8 8m4-4l4 4"/>
+            </svg>
+            <span>Import Excel</span>
+        </a>
+
         <a href="{{ route('admin.masyarakat.create') }}" class="btn-primary">
-            <span>+ Tambah Masyarakat</span>
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>Tambah Masyarakat</span>
         </a>
     </div>
 </div>
@@ -153,7 +197,7 @@
                     <th>Nama & NIK</th>
                     <th>Kontak</th>
                     <th>Wilayah</th>
-                    <th>Status Verifikasi</th> <!-- DIUBAH DARI KEAHLIAN -->
+                    <th>Status Verifikasi</th>
                     <th>Status Pekerjaan</th>
                     <th class="text-center" width="70">Aksi</th>
                 </tr>
@@ -168,7 +212,7 @@
                         </td>
                         <td>{{ $warga->telepon }}</td>
                         <td>{{ $warga->kecamatan }}</td>
-                        
+
                         <!-- KOLOM STATUS VERIFIKASI -->
                         <td>
                             @if(($warga->status_verifikasi ?? '') === 'Terverifikasi')
@@ -177,7 +221,7 @@
                                 <span class="badge-status badge-pending">Belum Terverifikasi</span>
                             @endif
                         </td>
-                        
+
                         <td><span class="badge">{{ $warga->status_pekerjaan }}</span></td>
                         <td>
                             <div style="display: flex; gap: 6px; justify-content: center;">

@@ -4,22 +4,96 @@
     <meta charset="UTF-8">
     <title>Laporan Monitoring Program Pemberdayaan</title>
     <style>
-        body { font-family: sans-serif; font-size: 10px; color: #1e293b; line-height: 1.4; }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #12395B; padding-bottom: 10px; }
-        .header h2 { margin: 0; color: #12395B; font-size: 15px; text-transform: uppercase; }
-        .header p { margin: 3px 0 0 0; color: #64748b; font-size: 9px; }
+        /* Mengatur margin halaman PDF A4 */
+        @page {
+            margin: 12mm 15mm;
+        }
+        body { 
+            font-family: sans-serif; 
+            font-size: 9px; 
+            color: #1e293b; 
+            line-height: 1.4; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 15px; 
+            border-bottom: 2px solid #12395B; 
+            padding-bottom: 8px; 
+        }
+        .header h2 { 
+            margin: 0; 
+            color: #12395B; 
+            font-size: 14px; 
+            text-transform: uppercase; 
+        }
+        .header p { 
+            margin: 3px 0 0 0; 
+            color: #64748b; 
+            font-size: 8.5px; 
+        }
         
-        .stat-grid { width: 100%; margin-bottom: 15px; border-collapse: collapse; }
-        .stat-card { background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px; text-align: center; }
-        .stat-label { font-size: 8px; color: #64748b; font-weight: bold; text-transform: uppercase; }
-        .stat-value { font-size: 14px; font-weight: bold; color: #0f172a; margin-top: 3px; }
+        /* Layout Grid Ringkasan */
+        .stat-grid { 
+            width: 100%; 
+            margin-bottom: 12px; 
+            border-collapse: collapse; 
+            table-layout: fixed;
+        }
+        .stat-card { 
+            background: #f8fafc; 
+            border: 1px solid #cbd5e1; 
+            padding: 6px; 
+            text-align: center; 
+            width: 25%;
+        }
+        .stat-label { 
+            font-size: 7.5px; 
+            color: #64748b; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+        }
+        .stat-value { 
+            font-size: 12px; 
+            font-weight: bold; 
+            color: #0f172a; 
+            margin-top: 2px; 
+        }
         
-        .section-title { font-size: 11px; font-weight: bold; color: #12395B; margin-top: 15px; margin-bottom: 6px; border-left: 3px solid #12395B; padding-left: 6px; text-transform: uppercase; }
+        .section-title { 
+            font-size: 10px; 
+            font-weight: bold; 
+            color: #12395B; 
+            margin-top: 12px; 
+            margin-bottom: 6px; 
+            border-left: 3px solid #12395B; 
+            padding-left: 6px; 
+            text-transform: uppercase; 
+        }
         
-        .table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
-        .table th, .table td { border: 1px solid #cbd5e1; padding: 5px 7px; text-align: left; }
-        .table th { background-color: #f1f5f9; color: #334155; font-weight: bold; font-size: 8.5px; text-transform: uppercase; }
-        .table-striped tbody tr:nth-of-type(odd) { background-color: #f8fafc; }
+        /* CSS Utama Tabel */
+        .table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 12px; 
+            table-layout: fixed; /* Penting: Memaksa DomPDF mematuhi lebar kolom % */
+        }
+        .table th, .table td { 
+            border: 1px solid #cbd5e1; 
+            padding: 5px 6px; 
+            text-align: left; 
+            word-wrap: break-word; /* Mencegah teks panjang melebarkan tabel keluar batas */
+            vertical-align: middle;
+        }
+        .table th { 
+            background-color: #f1f5f9; 
+            color: #334155; 
+            font-weight: bold; 
+            font-size: 8px; 
+            text-transform: uppercase; 
+        }
+        .table-striped tbody tr:nth-of-type(odd) { 
+            background-color: #f8fafc; 
+        }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
     </style>
@@ -53,13 +127,13 @@
         </tr>
     </table>
 
-    <!-- 2. DISTRIBUSI PEKERJAAN (PERSENTASE SAMA DEGAN UI) -->
+    <!-- 2. DISTRIBUSI PEKERJAAN -->
     <div class="section-title">1. Pemetaan Kondisi Pekerjaan Warga</div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th style="width: 5%;" class="text-center">No</th>
-                <th>Status Pekerjaan Saat Ini</th>
+                <th style="width: 50%;">Status Pekerjaan Saat Ini</th>
                 <th style="width: 25%;" class="text-center">Jumlah Warga</th>
                 <th style="width: 20%;" class="text-center">Persentase</th>
             </tr>
@@ -79,15 +153,15 @@
         </tbody>
     </table>
 
-    <!-- 3. KECAMATAN REKAPITULASI (PERSENTASE SAMA DENGAN UI) -->
+    <!-- 3. REKAPITULASI KECAMATAN -->
     <div class="section-title">2. Rekapitulasi Data Wilayah (Kecamatan)</div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th style="width: 5%;" class="text-center">No</th>
-                <th>Kecamatan</th>
+                <th style="width: 30%;">Kecamatan</th>
                 <th style="width: 25%;" class="text-center">Warga Membutuhkan Kerja</th>
-                <th style="width: 25%;" class="text-center">Total Warga Terdaftar</th>
+                <th style="width: 20%;" class="text-center">Total Warga Terdaftar</th>
                 <th style="width: 20%;" class="text-center">Rasio Kebutuhan</th>
             </tr>
         </thead>
@@ -99,7 +173,7 @@
                 <tr>
                     <td class="text-center">{{ $index + 1 }}</td>
                     <td><strong>{{ $kec->kecamatan }}</strong></td>
-                    <td class="text-center" style="color: #d97706; font-weight: bold;">{{ number_format($kec->butuh_kerja) }} Warga</td>
+                    <td class="text-center" style=" font-weight: bold;">{{ number_format($kec->butuh_kerja) }} Warga</td>
                     <td class="text-center">{{ number_format($kec->total_warga) }} Warga</td>
                     <td class="text-center"><strong>{{ $rasio }}%</strong></td>
                 </tr>
@@ -111,17 +185,17 @@
         </tbody>
     </table>
 
-    <!-- 4. PEMBARUAN PENEMPATAN -->
+    <!-- 4. RIWAYAT PENEMPATAN -->
     <div class="section-title">3. Riwayat Penempatan Program</div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th style="width: 5%;" class="text-center">No</th>
-                <th>Nama Warga</th>
-                <th>NIK</th>
-                <th>Program Pemberdayaan</th>
-                <th style="width: 15%;" class="text-center">Status</th>
-                <th style="width: 20%;">Tanggal Update</th>
+                <th style="width: 20%;">Nama Warga</th>
+                <th style="width: 20%;">NIK</th>
+                <th style="width: 25%;">Program Pemberdayaan</th>
+                <th style="width: 12%;" class="text-center">Status</th>
+                <th style="width: 18%;">Tanggal Update</th>
             </tr>
         </thead>
         <tbody>
@@ -139,19 +213,22 @@
                     <td colspan="6" class="text-center">Belum ada riwayat penempatan program.</td>
                 </tr>
             @endforelse
-    <!-- REKAPITULASI PROGRAM & KUOTA (UKPD / CSR) -->
-    <div class="section-title">Rekapitulasi Kuota & Serapan Program (UKPD / CSR)</div>
+        </tbody>
+    </table> {{-- Tag penutup ditambahkan --}}
+
+    <!-- 5. REKAPITULASI PROGRAM & KUOTA (UKPD / CSR) -->
+    <div class="section-title">4. Rekapitulasi Kuota & Serapan Program (UKPD / CSR)</div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th style="width: 4%;" class="text-center">No</th>
-                <th>Program Pemberdayaan</th>
-                <th>Mitra Penyelenggara</th>
+                <th style="width: 24%;">Program Pemberdayaan</th>
+                <th style="width: 22%;">Mitra Penyelenggara</th>
                 <th style="width: 10%;" class="text-center">Kategori</th>
-                <th style="width: 12%;" class="text-center">Kuota Total</th>
-                <th style="width: 12%;" class="text-center">Warga Masuk</th>
-                <th style="width: 12%;" class="text-center">Sisa Kuota</th>
-                <th style="width: 14%;" class="text-center">Serapan (%)</th>
+                <th style="width: 10%;" class="text-center">Kuota Total</th>
+                <th style="width: 10%;" class="text-center">Warga Masuk</th>
+                <th style="width: 10%;" class="text-center">Sisa Kuota</th>
+                <th style="width: 10%;" class="text-center">Serapan (%)</th>
             </tr>
         </thead>
         <tbody>
@@ -179,7 +256,7 @@
                 </tr>
             @endforelse
         </tbody>
-</table>
+    </table>
 
 </body>
 </html>
