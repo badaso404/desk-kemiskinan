@@ -51,6 +51,14 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     // Data Masyarakat
+    Route::get('/masyarakat/import', [MasyarakatController::class, 'importForm'])
+        ->name('masyarakat.import.form');
+
+    Route::post('/masyarakat/import', [MasyarakatController::class, 'import'])
+        ->name('masyarakat.import');
+
+    Route::get('/masyarakat/import/template', [MasyarakatController::class, 'downloadTemplate'])
+        ->name('masyarakat.template');
     Route::get('/masyarakat', [MasyarakatController::class, 'index'])->name('masyarakat');
     Route::get('/masyarakat/create', [MasyarakatController::class, 'create'])->name('masyarakat.create');
     Route::post('/masyarakat', [MasyarakatController::class, 'store'])->name('masyarakat.store');
@@ -59,6 +67,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::delete('/masyarakat/{id}', [MasyarakatController::class, 'destroy'])->name('masyarakat.destroy');
     Route::get('/masyarakat/{id}', [MasyarakatController::class, 'show'])->name('masyarakat.show');
     Route::patch('/masyarakat/{id}/verify', [MasyarakatController::class, 'verify'])->name('masyarakat.verify');
+
+
 
     // Pemberdayaan: penyelenggara (UKPD/CSR) dan program
     Route::get('/pemberdayaan', [PemberdayaanController::class, 'index'])->name('pemberdayaan');

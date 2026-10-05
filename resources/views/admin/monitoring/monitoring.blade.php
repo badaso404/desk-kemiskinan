@@ -20,6 +20,8 @@
         --success-soft: #dcfce7;
         --warning:      #d97706;
         --warning-soft: #fef3c7;
+        --orange:       #ea580c;
+        --orange-soft:  #ffedd5;
         --danger:       #dc2626;
         --danger-soft:  #fee2e2;
     }
@@ -250,7 +252,7 @@
         color: var(--text-mute);
     }
 
-    /* Panel footer (ringkasan di dasar panel) */
+    /* Panel footer */
     .panel-foot {
         display: flex;
         justify-content: space-between;
@@ -408,6 +410,7 @@
     }
     .kecamatan-meta .pct-badge.tone-success { background: var(--success-soft); color: #166534; }
     .kecamatan-meta .pct-badge.tone-warning { background: var(--warning-soft); color: #854d0e; }
+    .kecamatan-meta .pct-badge.tone-orange  { background: var(--orange-soft);  color: #9a3412; }
     .kecamatan-meta .pct-badge.tone-danger  { background: var(--danger-soft);  color: #991b1b; }
 
     .kecamatan-bar {
@@ -424,6 +427,7 @@
     }
     .kecamatan-bar-fill.tone-success { background: var(--success); }
     .kecamatan-bar-fill.tone-warning { background: var(--warning); }
+    .kecamatan-bar-fill.tone-orange  { background: var(--orange); }
     .kecamatan-bar-fill.tone-danger  { background: var(--danger); }
 
     /* ================= RECENT / TIMELINE ================= */
@@ -561,6 +565,7 @@
     .sisa-value.has-slot  { color: var(--warning); }
     .sisa-value.full      { color: var(--success); }
 
+    /* ===== SERAPAN CELL ===== */
     .serapan-cell {
         display: flex;
         flex-direction: column;
@@ -574,6 +579,7 @@
     }
     .serapan-pct.tone-success { color: var(--success); }
     .serapan-pct.tone-warning { color: var(--warning); }
+    .serapan-pct.tone-orange  { color: var(--orange); }
     .serapan-pct.tone-danger  { color: var(--danger); }
     .serapan-pct.tone-neutral { color: var(--text-mute); }
 
@@ -590,6 +596,7 @@
     }
     .serapan-fill.tone-success { background: var(--success); }
     .serapan-fill.tone-warning { background: var(--warning); }
+    .serapan-fill.tone-orange  { background: var(--orange); }
     .serapan-fill.tone-danger  { background: var(--danger); }
     .serapan-fill.tone-neutral { background: var(--text-mute); }
 
@@ -630,7 +637,7 @@
 </style>
 
 @php
-    /* Helper presentational — tidak mengubah data, hanya menentukan tone visual */
+    /* Helper presentational — menentukan tone visual dari status pekerjaan */
     $toneFor = function ($key) {
         $k = strtolower(trim((string) $key));
         return match (true) {
@@ -776,7 +783,14 @@
                 @forelse ($rekapKecamatan as $kec)
                     @php
                         $rasioKec = $kec->total_warga > 0 ? round(($kec->butuh_kerja / $kec->total_warga) * 100, 1) : 0;
-                        $kecTone  = $rasioKec <= 0 ? 'success' : ($rasioKec < 50 ? 'warning' : 'danger');
+
+                        /* Semakin tinggi = semakin banyak yang butuh kerja = semakin buruk */
+                        $kecTone = match(true) {
+                            $rasioKec < 25  => 'success',
+                            $rasioKec < 50  => 'warning',
+                            $rasioKec < 70  => 'orange',
+                            default         => 'danger',
+                        };
                     @endphp
                     <div class="kecamatan-item">
                         <div class="kecamatan-head">
@@ -834,10 +848,17 @@
                                 $serapan = $kuota > 0 ? round(($masuk / $kuota) * 100, 1) : 0;
                                 $isCsr   = strtoupper($prog->mitra?->kategori ?? '') === 'CSR';
 
-                                if ($kuota === 0)        $serapanTone = 'neutral';
-                                elseif ($serapan >= 100) $serapanTone = 'success';
-                                elseif ($serapan > 0)    $serapanTone = 'warning';
-                                else                     $serapanTone = 'danger';
+                                /* Serapan — semakin tinggi = semakin baik */
+                                if ($kuota === 0) {
+                                    $serapanTone = 'neutral';
+                                } else {
+                                    $serapanTone = match(true) {
+                                        $serapan < 25  => 'danger',    // 0 – 24.9%   → merah
+                                        $serapan < 50  => 'orange',    // 25 – 49.9%  → oranye
+                                        $serapan < 70  => 'warning',   // 50 – 69.9%  → kuning
+                                        default        => 'success',   // 70 – 100%+  → hijau
+                                    };
+                                }
 
                                 $sisaTone = $sisa > 0 ? 'has-slot' : 'full';
                             @endphp

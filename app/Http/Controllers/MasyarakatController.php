@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\MasyarakatImport;
+use App\Exports\MasyarakatTemplateExport;
 use App\Models\AuditTrail;
 use App\Models\Masyarakat;
 use Illuminate\Http\Request;
@@ -178,6 +181,50 @@ class MasyarakatController extends Controller
         }
 
         return redirect()->route('admin.masyarakat')->with('error', 'Data tidak ditemukan!');
+    }
+    public function importForm()
+    {
+        return view('admin.import');
+    }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:5120',
+        ], [
+            'file.required' => 'Silakan pilih file terlebih dahulu.',
+            'file.mimes'    => 'Format file harus .xlsx, .xls, atau .csv.',
+            'file.max'      => 'Ukuran file maksimal 5 MB.',
+        ]);
+
+        try {
+            $import = new MasyarakatImport();
+            Excel::import($import, $request->file('file'));
+
+            $msg = "Berhasil import {$import->successCount} data.";
+
+            if ($import->errorCount > 0) {
+                return redirect()
+                    ->route('admin.masyarakat')
+                    ->with('success', $msg)
+                    ->with('import_warning', $import->errorCount . ' baris dilewati karena data tidak valid.');
+            }
+
+            return redirect()
+                ->route('admin.masyarakat')
+                ->with('success', $msg);
+
+        } catch (\Throwable $e) {
+            return redirect()
+                ->route('admin.masyarakat.import.form')
+                ->with('error', 'Gagal import: ' . $e->getMessage());
+        }
+    }
+    public function downloadTemplate()
+    {
+        return Excel::download(
+            new MasyarakatTemplateExport(),
+            'template-import-masyarakat.xlsx'
+        );
     }
 
     public function show($id)
