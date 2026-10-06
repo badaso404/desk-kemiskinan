@@ -15,7 +15,6 @@
         --line:         #e5e7eb;
         --line-soft:    #f1f5f9;
 
-        /* Semantic */
         --success:      #16a34a;
         --success-soft: #dcfce7;
         --warning:      #d97706;
@@ -56,6 +55,12 @@
         margin: 0;
         line-height: 1.4;
     }
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+        flex-wrap: wrap;
+    }
     .btn-download-pdf {
         display: inline-flex;
         align-items: center;
@@ -68,9 +73,118 @@
         border-radius: 6px;
         text-decoration: none;
         transition: background .15s ease;
+        white-space: nowrap;
     }
     .btn-download-pdf:hover { background: #b91c1c; color: #fff; }
     .btn-download-pdf:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    /* ================= FILTER PERIODE ================= */
+    .filter-bar {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-period {
+        display: flex;
+        align-items: center;
+        gap: .5rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-label {
+        font-size: .82rem;
+        font-weight: 600;
+        color: var(--text-mute);
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        margin-right: .25rem;
+    }
+    .filter-label svg { opacity: .7; }
+
+    .filter-select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: var(--surface);
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding: .55rem 2rem .55rem .85rem;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: .85rem;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        transition: border-color .15s ease, box-shadow .15s ease;
+        min-width: 130px;
+    }
+    .filter-select:hover { border-color: #cbd5e1; }
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(18, 57, 91, 0.1);
+    }
+
+    .btn-filter {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--brand);
+        color: #fff;
+        font-family: inherit;
+        font-size: .82rem;
+        font-weight: 600;
+        padding: .55rem 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background .15s ease;
+    }
+    .btn-filter:hover { background: #0d2a43; }
+
+    .btn-filter-reset {
+        display: inline-flex;
+        align-items: center;
+        gap: .35rem;
+        background: transparent;
+        color: var(--text-mute);
+        font-family: inherit;
+        font-size: .82rem;
+        font-weight: 500;
+        padding: .55rem .75rem;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background .15s ease, color .15s ease;
+    }
+    .btn-filter-reset:hover {
+        background: var(--neutral);
+        color: var(--text);
+    }
+
+    .filter-summary {
+        font-size: .78rem;
+        color: var(--text-mute);
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+        padding: .4rem .75rem;
+        background: var(--brand-soft);
+        color: var(--brand);
+        border-radius: 6px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .filter-summary svg { opacity: .8; }
 
     /* ================= STAT ================= */
     .stat-layout {
@@ -252,7 +366,6 @@
         color: var(--text-mute);
     }
 
-    /* Panel footer */
     .panel-foot {
         display: flex;
         justify-content: space-between;
@@ -506,7 +619,11 @@
         color: var(--text-mute);
         font-size: .85rem;
     }
-    .empty-state p { margin: 0; }
+    .empty-state p { margin: 0 0 .25rem 0; }
+    .empty-state small {
+        font-size: .75rem;
+        color: #94a3b8;
+    }
 
     /* ================= TABLE ================= */
     .table-wrapper {
@@ -565,7 +682,6 @@
     .sisa-value.has-slot  { color: var(--warning); }
     .sisa-value.full      { color: var(--success); }
 
-    /* ===== SERAPAN CELL ===== */
     .serapan-cell {
         display: flex;
         flex-direction: column;
@@ -622,7 +738,14 @@
         .stat-hero { min-height: auto; }
     }
     @media (max-width: 640px) {
+        .header-actions { width: 100%; flex-direction: column; align-items: stretch; }
         .btn-download-pdf { width: 100%; justify-content: center; }
+        .filter-bar { flex-direction: column; align-items: stretch; }
+        .filter-period { flex-direction: column; align-items: stretch; }
+        .filter-select { width: 100%; }
+        .btn-filter, .btn-filter-reset { width: 100%; justify-content: center; }
+        .filter-summary { align-self: flex-start; }
+
         .status-row { grid-template-columns: minmax(90px,1fr) 1.5fr minmax(60px,auto); gap: .5rem; }
         .recent-item { grid-template-columns: 10px 1fr; row-gap: .5rem; }
         .recent-item > .badge-status-penempatan { grid-column: 2; justify-self: start; }
@@ -637,7 +760,6 @@
 </style>
 
 @php
-    /* Helper presentational — menentukan tone visual dari status pekerjaan */
     $toneFor = function ($key) {
         $k = strtolower(trim((string) $key));
         return match (true) {
@@ -652,6 +774,19 @@
         fn ($p) => strtoupper($p->mitra?->kategori ?? '') === 'CSR'
     );
     $colCount = $hasCsr ? 8 : 7;
+
+    /* Nama bulan untuk tampilan */
+    $namaBulan = [
+        1 => 'Januari', 2 => 'Februari', 3 => 'Maret', 4 => 'April',
+        5 => 'Mei', 6 => 'Juni', 7 => 'Juli', 8 => 'Agustus',
+        9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+    ];
+
+    /* Range tahun: 3 tahun ke belakang sampai tahun ini */
+    $tahunSekarang = now()->year;
+    $daftarTahun   = range($tahunSekarang, $tahunSekarang - 3);
+
+    $isFiltered = ((int) $bulan !== now()->month) || ((int) $tahun !== now()->year);
 @endphp
 
 <div class="monitoring-wrapper">
@@ -663,20 +798,80 @@
             <p>Pemantauan status masyarakat, rekap data wilayah, dan ekspor laporan</p>
         </div>
 
-        <a href="{{ route('admin.monitoring.download-pdf') }}" class="btn-download-pdf" target="_blank" rel="noopener">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-            <span>Download PDF</span>
-        </a>
+        <div class="header-actions">
+            <a href="{{ route('admin.monitoring.download-pdf', ['bulan' => $bulan, 'tahun' => $tahun]) }}"
+               class="btn-download-pdf"
+               target="_blank"
+               rel="noopener">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                <span>Download PDF</span>
+            </a>
+        </div>
     </div>
+
+    <!-- ============ FILTER PERIODE ============ -->
+    <form method="GET" action="{{ route('admin.monitoring') }}" class="filter-bar" id="filterForm">
+        <div class="filter-period">
+            <span class="filter-label">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <path d="M16 2v4M8 2v4M3 10h18"/>
+                </svg>
+                Periode
+            </span>
+
+            <select name="bulan" class="filter-select" onchange="document.getElementById('filterForm').submit()">
+                @foreach ($namaBulan as $num => $nama)
+                    <option value="{{ $num }}" {{ (int) $bulan === $num ? 'selected' : '' }}>
+                        {{ $nama }}
+                    </option>
+                @endforeach
+            </select>
+
+            <select name="tahun" class="filter-select" onchange="document.getElementById('filterForm').submit()">
+                @foreach ($daftarTahun as $thn)
+                    <option value="{{ $thn }}" {{ (int) $tahun === $thn ? 'selected' : '' }}>
+                        {{ $thn }}
+                    </option>
+                @endforeach
+            </select>
+
+            <button type="submit" class="btn-filter">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="7"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                Terapkan
+            </button>
+
+            @if($isFiltered)
+                <a href="{{ route('admin.monitoring') }}" class="btn-filter-reset">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>
+                        <path d="M3 3v5h5"/>
+                    </svg>
+                    Reset
+                </a>
+            @endif
+        </div>
+
+        <span class="filter-summary">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+            {{ $namaBulan[(int) $bulan] }} {{ $tahun }}
+        </span>
+    </form>
 
     <!-- ============ STAT ============ -->
     <section class="stat-layout">
         <div class="stat-hero">
             <p class="stat-hero-label">Total Masyarakat</p>
             <div class="stat-hero-value">{{ number_format($totalMasyarakat) }}</div>
-            <p class="stat-hero-foot">Terdaftar dalam sistem</p>
+            <p class="stat-hero-foot">Terdaftar pada periode ini</p>
         </div>
 
         <div class="stat-rows">
@@ -757,7 +952,10 @@
                         </div>
                     </div>
                 @empty
-                    <div class="empty-state"><p>Belum ada data status pekerjaan.</p></div>
+                    <div class="empty-state">
+                        <p>Belum ada data status pekerjaan.</p>
+                        <small>pada periode {{ $namaBulan[(int) $bulan] }} {{ $tahun }}</small>
+                    </div>
                 @endforelse
             </div>
 
@@ -784,7 +982,6 @@
                     @php
                         $rasioKec = $kec->total_warga > 0 ? round(($kec->butuh_kerja / $kec->total_warga) * 100, 1) : 0;
 
-                        /* Semakin tinggi = semakin banyak yang butuh kerja = semakin buruk */
                         $kecTone = match(true) {
                             $rasioKec < 25  => 'success',
                             $rasioKec < 50  => 'warning',
@@ -806,7 +1003,10 @@
                         </div>
                     </div>
                 @empty
-                    <div class="empty-state"><p>Belum ada data kecamatan terdaftar.</p></div>
+                    <div class="empty-state">
+                        <p>Belum ada data kecamatan terdaftar.</p>
+                        <small>pada periode {{ $namaBulan[(int) $bulan] }} {{ $tahun }}</small>
+                    </div>
                 @endforelse
             </div>
         </article>
@@ -848,15 +1048,14 @@
                                 $serapan = $kuota > 0 ? round(($masuk / $kuota) * 100, 1) : 0;
                                 $isCsr   = strtoupper($prog->mitra?->kategori ?? '') === 'CSR';
 
-                                /* Serapan — semakin tinggi = semakin baik */
                                 if ($kuota === 0) {
                                     $serapanTone = 'neutral';
                                 } else {
                                     $serapanTone = match(true) {
-                                        $serapan < 25  => 'danger',    // 0 – 24.9%   → merah
-                                        $serapan < 50  => 'orange',    // 25 – 49.9%  → oranye
-                                        $serapan < 70  => 'warning',   // 50 – 69.9%  → kuning
-                                        default        => 'success',   // 70 – 100%+  → hijau
+                                        $serapan < 25  => 'danger',
+                                        $serapan < 50  => 'orange',
+                                        $serapan < 70  => 'warning',
+                                        default        => 'success',
                                     };
                                 }
 
@@ -891,7 +1090,10 @@
                         @empty
                             <tr>
                                 <td colspan="{{ $colCount }}">
-                                    <div class="empty-state"><p>Belum ada data program pemberdayaan.</p></div>
+                                    <div class="empty-state">
+                                        <p>Belum ada data program pemberdayaan.</p>
+                                        <small>pada periode {{ $namaBulan[(int) $bulan] }} {{ $tahun }}</small>
+                                    </div>
                                 </td>
                             </tr>
                         @endforelse
@@ -948,7 +1150,10 @@
                     </span>
                 </div>
             @empty
-                <div class="empty-state"><p>Belum ada riwayat penempatan program yang tersimpan.</p></div>
+                <div class="empty-state">
+                    <p>Belum ada riwayat penempatan program yang tersimpan.</p>
+                    <small>pada periode {{ $namaBulan[(int) $bulan] }} {{ $tahun }}</small>
+                </div>
             @endforelse
         </div>
     </article>

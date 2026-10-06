@@ -75,13 +75,13 @@
             width: 100%; 
             border-collapse: collapse; 
             margin-bottom: 12px; 
-            table-layout: fixed; /* Penting: Memaksa DomPDF mematuhi lebar kolom % */
+            table-layout: fixed;
         }
         .table th, .table td { 
             border: 1px solid #cbd5e1; 
             padding: 5px 6px; 
             text-align: left; 
-            word-wrap: break-word; /* Mencegah teks panjang melebarkan tabel keluar batas */
+            word-wrap: break-word;
             vertical-align: middle;
         }
         .table th { 
@@ -139,7 +139,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($distribusiPekerjaan as $index => $row)
+            @forelse($distribusiPekerjaan as $index => $row)
                 @php
                     $pct = $totalMasyarakat > 0 ? round(($row->total / $totalMasyarakat) * 100, 1) : 0;
                 @endphp
@@ -149,7 +149,11 @@
                     <td class="text-center">{{ number_format($row->total) }} Orang</td>
                     <td class="text-center"><strong>{{ $pct }}%</strong></td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center">Belum ada data status pekerjaan.</td>
+                </tr>
+            @endforelse
         </tbody>
     </table>
 
@@ -185,39 +189,8 @@
         </tbody>
     </table>
 
-    <!-- 4. RIWAYAT PENEMPATAN -->
-    <div class="section-title">3. Riwayat Penempatan Program</div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th style="width: 5%;" class="text-center">No</th>
-                <th style="width: 20%;">Nama Warga</th>
-                <th style="width: 20%;">NIK</th>
-                <th style="width: 25%;">Program Pemberdayaan</th>
-                <th style="width: 12%;" class="text-center">Status</th>
-                <th style="width: 18%;">Tanggal Update</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse ($penempatanTerbaru as $index => $p)
-                <tr>
-                    <td class="text-center">{{ $index + 1 }}</td>
-                    <td><strong>{{ $p->masyarakat?->nama ?? '-' }}</strong></td>
-                    <td>{{ $p->masyarakat?->nik ?? '-' }}</td>
-                    <td>{{ $p->program?->nama ?? '-' }}</td>
-                    <td class="text-center"><strong>{{ $p->status }}</strong></td>
-                    <td>{{ $p->updated_at ? $p->updated_at->format('d/m/Y H:i') : '-' }}</td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="6" class="text-center">Belum ada riwayat penempatan program.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table> {{-- Tag penutup ditambahkan --}}
-
-    <!-- 5. REKAPITULASI PROGRAM & KUOTA (UKPD / CSR) -->
-    <div class="section-title">4. Rekapitulasi Kuota & Serapan Program (UKPD / CSR)</div>
+    <!-- 4. REKAPITULASI PROGRAM & KUOTA (UKPD / CSR) -->
+    <div class="section-title">3. Rekapitulasi Kuota &amp; Serapan Program (UKPD / CSR)</div>
     <table class="table table-striped">
         <thead>
             <tr>
