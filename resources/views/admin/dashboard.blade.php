@@ -4,7 +4,20 @@
 
 @section('content')
 @php
-    $userRole = auth()->user()->role ?? 'admin';
+    // Mapping angka ID ke teks role (Cara Anti-Gagal)
+    $roleMap = [
+        1 => 'admin',
+        2 => 'kecamatan',
+        4 => 'pimpinan_kesra',
+        3 => 'kelurahan',
+        5 => 'walikota'
+    ];
+    
+    // Ambil ID user yang login, default ke 1 jika ada error
+    $userRoleId = auth()->user()->role_id ?? 1;
+    
+    // PERBAIKAN DI SINI: Gunakan $roleMap, bukan ->role->name
+    $userRole = $roleMap[$userRoleId] ?? 'admin';
 
     // Mapping Nama Role untuk Judul Utama Selamat Datang
     $roleLabels = [
